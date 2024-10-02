@@ -5,7 +5,7 @@ default: help
 ##= Run
 
 run:
-	python ./k_dojo/manage.py runserver
+	python ./server/manage.py runserver
 
 start-db: $(ENV_FILE)
 	sudo docker compose up -d
