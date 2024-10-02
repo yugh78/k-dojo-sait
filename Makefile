@@ -4,8 +4,14 @@ default: help
 
 ##= Run
 
-run:
+install-deps:
+	pip install -r ./server/requirements.txt
+
+run: format
 	python ./server/manage.py runserver
+
+format:
+	python -m black ./server
 
 start-db: $(ENV_FILE)
 	sudo docker compose up -d
