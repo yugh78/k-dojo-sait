@@ -33,8 +33,9 @@ $(ENV_FILE):
 NALA := /usr/bin/nala
 GIT := /usr/bin/git
 DOCKER := /usr/bin/docker
+DOCKER_COMPOSE := docker-compose
 
-nala-upgrade:
+nala-upgrade: $(NALA)
 	sudo nala update
 	sudo nala upgrade
 
@@ -43,10 +44,10 @@ $(NALA):
 	sudo apt upgrade
 	sudo apt install nala
 
-$(GIT): $(NALA) nala-upgrade
+$(GIT): nala-upgrade
 	sudo nala install git
 
-$(DOCKER): $(NALA) nala-upgrade
+$(DOCKER): nala-upgrade
 	sudo nala install docker
 
 $(DOCKER_COMPOSE): $(DOCKER)
