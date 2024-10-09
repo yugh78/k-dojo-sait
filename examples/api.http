@@ -1,0 +1,8 @@
+@host=http://localhost:1488
+
+POST {{host}}/api/requests/all
+
+{
+  "page": 0,
+  "count": 10
+}
