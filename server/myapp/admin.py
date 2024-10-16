@@ -7,7 +7,7 @@ admin.site.register(Product)
 
 @admin.register(Request)
 class RequestAdmin(admin.ModelAdmin):
-    list_display = ('name', 'subject', 'status', 'created_at', 'updated_at')
-    search_fields = ('name', 'subject', 'email')
-    list_filter = ('status', 'created_at')
+    list_display = ('name','is_read', 'created_at', 'phone')
+    search_fields = ('name',)
+    list_filter = ('is_read',)
     

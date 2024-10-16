@@ -5,5 +5,5 @@ from .models import Request
 class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
-        fields = ['name', 'email', 'phone', 'subject', 'description']
+        fields = ['name', 'phone', 'message']
         
