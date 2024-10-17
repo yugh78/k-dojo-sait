@@ -76,8 +76,12 @@ WSGI_APPLICATION = "k_dojo.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.postgresql',  # Используем драйвер PostgreSQL
+        'NAME': 'Dojo_database',                      # Имя базы данных
+        'USER': 'Katy248',                          # Имя пользователя базы данных
+        'PASSWORD': 'tsukuemi1',                  # Пароль пользователя
+        'HOST': '127.0.0.1',                       # Адрес сервера базы данных (локальный)
+        'PORT': '5432',    
     }
 }
 

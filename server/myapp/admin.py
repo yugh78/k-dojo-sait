@@ -7,7 +7,7 @@ admin.site.register(Product)
 
 @admin.register(Request)
 class RequestAdmin(admin.ModelAdmin):
-    list_display = ('name','is_read', 'created_at', 'phone')
-    search_fields = ('name',)
-    list_filter = ('is_read',)
+    list_display = ('name', 'phone','is_read', 'created_at') # Поля, которые будут отображаться
+    list_filter = ('is_read',)# Фильтры для удобного поиска заявок
+    search_fields = ('name','phone','message')# Поля для поиска заявок 
     
