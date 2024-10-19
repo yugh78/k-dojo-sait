@@ -17,7 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from myapp import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('applications/create/', views.create_request, name='create_application'),
+    path('request/success/', views.request_success, name= 'request_success'),
 ]

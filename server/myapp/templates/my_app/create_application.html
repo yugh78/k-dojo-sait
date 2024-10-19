@@ -1,0 +1,17 @@
+<form method="POST">
+    { {% csrf_token %}}
+    <label for="name">Имя:</label>
+    <input type="text" id="name" name="name" required><br>
+    
+    <label for="phone">Телефон:</label>
+  <input type="text" id="phone" name="phone" required><br>
+  
+  <label for="message">Сообщение:</label>
+  <textarea id="message" name="message" required></textarea><br>
+  
+  <button type="submit">Отправить заявку</button>
+</form>
+
+{% if success %}
+    <p>Спасибо за вашу заявку! Мы свяжемся с вами в ближайшее время.</p>
+{% endif %}
