@@ -13,7 +13,7 @@ $(ENV_FILE):
 install-python-deps:
 	pip install -r ./server/requirements.txt
 
-run: format
+run-server: format
 	source $(ENV_FILE) && \
 	python ./server/manage.py runserver
 
@@ -22,8 +22,7 @@ format:
 
 start-db: $(ENV_FILE)
 	source $(ENV_FILE) && \
-	sudo docker compose up -d && \
-	echo "Database is running on  port"
+	sudo docker compose up -d
 
 stop-db:
 	sudo docker compose down || echo "Already stopped"
