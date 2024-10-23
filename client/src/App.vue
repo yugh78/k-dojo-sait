@@ -1,5 +1,6 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+
 import { ref } from 'vue'
 let routes = ref([{ url: "/", displayName: "Главная" }, { url: "/about", displayName: "О сайте" }])
 </script>
@@ -18,3 +19,4 @@ let routes = ref([{ url: "/", displayName: "Главная" }, { url: "/about", 
     <RouterView />
   </main>
 </template>
+
