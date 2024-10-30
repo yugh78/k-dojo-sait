@@ -1,4 +1,5 @@
-.PHONY: default run-server start-db stop-db restart-db nala-upgrade install-python-deps install-ubuntu-tools help
+.PHONY: default run-server restart-db nala-upgrade install-python-deps install-ubuntu-tools help \
+	db-start db-stop db-restart db-clear
 
 default: help
 
@@ -20,14 +21,18 @@ run-server: format
 format:
 	python -m black ./server
 
-start-db: $(ENV_FILE)
+db-start: $(ENV_FILE)
 	source $(ENV_FILE) && \
 	sudo docker compose up -d
+	sudo docker compose ps
 
-stop-db:
+db-stop:
 	sudo docker compose down || echo "Already stopped"
 
-restart-db: stop-db start-db
+db-clear: db-stop
+	sudo docker compose rm --stop --force --volumes
+
+db-restart: stop-db start-db
 
 migrate-db:
 	source $(ENV_FILE) && \
