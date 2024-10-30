@@ -1,39 +1,51 @@
-.PHONY: default run-server start-db stop-db restart-db nala-upgrade install-python-deps install-ubuntu-tools help
+COLOR := $(shell tput setaf 5)
+COLOR_RESET := $(shell tput sgr0)
+
+.PHONY: default nala-upgrade help \
+	db-start db-stop db-restart db-clear db-migrate \
+	server-setup server-run server-format \
+	tools-install-ubuntu-wsl
 
 default: help
-
-##= Run
+	@echo -e "$(COLOR)Не запускайте make без указания целей$(COLOR_RESET)"
 
 ENV_FILE := ./.env
 
 $(ENV_FILE):
 	cp ./examples/example.env $@
-	@echo "Environment file ('$@') is created, you should edit it"
+	@echo "$(COLOR)Environment file ('$@') is created, you should edit it$(COLOR_RESET)"
 
-install-python-deps:
+#= SERVER
+
+server-setup:
 	pip install -r ./server/requirements.txt
 
-run-server: format
+server-run: server-format
 	source $(ENV_FILE) && \
 	python ./server/manage.py runserver
 
-format:
+server-format:
 	python -m black ./server
 
-start-db: $(ENV_FILE)
+#= DATABASE
+
+db-start: $(ENV_FILE)
 	source $(ENV_FILE) && \
 	sudo docker compose up -d
+	sudo docker compose ps
 
-stop-db:
+db-stop:
 	sudo docker compose down || echo "Already stopped"
 
-restart-db: stop-db start-db
+db-clear: db-stop
+	sudo docker compose rm --stop --force --volumes
 
-migrate-db:
+db-restart: stop-db start-db
+
+db-migrate:
 	source $(ENV_FILE) && \
 		cd ./server/ && \
 		python manage.py migrate
-
 
 ##= Setup
 
@@ -51,25 +63,35 @@ $(NALA):
 	sudo apt upgrade
 	sudo apt install nala
 
+ca-certificates curl: $(NALA)
+	sudo nala install ca-certificates curl
+
 $(GIT): nala-upgrade
 	sudo nala install git
 
-$(DOCKER): nala-upgrade
-	sudo nala install docker
 
-$(DOCKER_COMPOSE): $(DOCKER)
-	sudo nala install ca-certificates curl
+DOCKER_KEYRING_FILE := /etc/apt/keyrings/docker.asc
+DOCKER_SOURCES_FILE := /etc/apt/sources.list.d/docker.list
+
+$(DOCKER_KEYRING_FILE): ca-certificates curl
 	sudo install -m 0755 -d /etc/apt/keyrings
-	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-	sudo chmod a+r /etc/apt/keyrings/docker.asc
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-				$(. /etc/os-release && echo "\$VERSION_CODENAME") stable" | \
+	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o $@
+	sudo chmod a+r $@
+
+OS_ARCH = $(shell dpkg --print-architecture)
+OS_VERSION_CODENAME := $(shell bash ./get-version-codename.sh)
+$(DOCKER_SOURCES_FILE): $(DOCKER_KEYRING_FILE)
+	echo "deb [arch=$(OS_ARCH) signed-by=$(DOCKER_KEYRING_FILE)] https://download.docker.com/linux/ubuntu $(OS_VERSION_CODENAME) stable" | \
 				sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	sudo nala update
+
+$(DOCKER): $(DOCKER_SOURCES_FILE) nala-upgrade
+	sudo nala install docker-ce
+
+$(DOCKER_COMPOSE): $(DOCKER_SOURCES_FILE) nala-upgrade
 	sudo nala install docker-compose-plugin
 
-install-ubuntu-tools: $(GIT) $(DOCKER_COMPOSE)
+tools-install-ubuntu-wsl: $(GIT) $(DOCKER_COMPOSE)
 	@echo "Все необходимые инструменты установлены"
 
 help:
-	@echo "Пожалуйста, прочтите Readme.md файл, раздел 'Настройка окружения'"
+	@echo -e "$(COLOR)Пожалуйста, прочтите Readme.md файл, раздел 'Настройка окружения'$(COLOR_RESET)"
