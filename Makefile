@@ -16,11 +16,11 @@ $(ENV_FILE):
 	@echo "$(COLOR)Environment file ('$@') is created, you should edit it$(COLOR_RESET)"
 
 #= SERVER
+PYTHON_REQUREMENTS_FILE := ./server/requirements.txt
+server-setup: $(PYTHON_REQUREMENTS_FILE)
+	pip install -r $<
 
-server-setup:
-	pip install -r ./server/requirements.txt
-
-server-run: server-format
+server-run: server-format $(ENV_FILE)
 	source $(ENV_FILE) && \
 	python ./server/manage.py runserver
 
@@ -53,6 +53,8 @@ NALA := /usr/bin/nala
 GIT := /usr/bin/git
 DOCKER := /usr/bin/docker
 DOCKER_COMPOSE := docker-compose
+PIP := /usr/bin/pip
+PYTHON := /usr/bin/python3
 
 nala-upgrade: $(NALA)
 	sudo nala update
@@ -68,6 +70,12 @@ ca-certificates curl: $(NALA)
 
 $(GIT): nala-upgrade
 	sudo nala install git
+
+$(PIP): $(PYTHON)
+	sudo nala install pip
+
+$(PYTHON):nala-upgrade
+	sudo nala install python3 python3-venv python3-full
 
 
 DOCKER_KEYRING_FILE := /etc/apt/keyrings/docker.asc
@@ -90,7 +98,7 @@ $(DOCKER): $(DOCKER_SOURCES_FILE) nala-upgrade
 $(DOCKER_COMPOSE): $(DOCKER_SOURCES_FILE) nala-upgrade
 	sudo nala install docker-compose-plugin
 
-tools-install-ubuntu-wsl: $(GIT) $(DOCKER_COMPOSE)
+tools-install-ubuntu-wsl: $(GIT) $(DOCKER_COMPOSE) $(PIP)
 	@echo "Все необходимые инструменты установлены"
 
 help:
