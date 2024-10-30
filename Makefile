@@ -20,7 +20,7 @@ $(ENV_FILE):
 server-setup:
 	pip install -r ./server/requirements.txt
 
-server-run: format
+server-run: server-format
 	source $(ENV_FILE) && \
 	python ./server/manage.py runserver
 

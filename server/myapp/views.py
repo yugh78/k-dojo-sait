@@ -13,9 +13,9 @@ def create_request(request):
     if request.method == "POST":
         data = loads(request.body)
 
-        name = data['name']
-        phone = data['phone']
-        message = data['message']
+        name = data["name"]
+        phone = data["phone"]
+        message = data["message"]
         Request.objects.create(name=name, phone=phone, message=message)
         return render(
             request, "my_app/create_application.html", {"succes": True}
