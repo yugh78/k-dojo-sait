@@ -1,8 +1,10 @@
-@host=http://localhost:1488
+@host=http://127.0.0.1:8000
 
-POST {{host}}/api/requests/all
+POST {{host}}/applications/create/
+Content-Type: application/json
 
 {
-  "page": 0,
-  "count": 10
+    "name": "Cool",
+    "phone": "88005553535",
+    "message": "Fuck"
 }

@@ -3,14 +3,19 @@ from django.http import HttpResponse
 from .forms import RequestForm
 from .models import Request
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
+from json import loads
 
 
-# Создание заявки
+@csrf_exempt
 def create_request(request):
+    """Создание заявки"""
     if request.method == "POST":
-        name = request.POST.get("name")
-        phone = request.POST.get("phone")
-        message = request.POST.get("message")
+        data = loads(request.body)
+
+        name = data['name']
+        phone = data['phone']
+        message = data['message']
         Request.objects.create(name=name, phone=phone, message=message)
         return render(
             request, "my_app/create_application.html", {"succes": True}
