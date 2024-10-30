@@ -1,2 +1,3 @@
 Django
 git+https://github.com/psf/black
+psycopg2-binary
