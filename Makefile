@@ -51,25 +51,37 @@ $(NALA):
 	sudo apt upgrade
 	sudo apt install nala
 
+ca-certificates curl: $(NALA)
+	sudo nala install ca-certificates curl
+
 $(GIT): nala-upgrade
 	sudo nala install git
 
-$(DOCKER): nala-upgrade
-	sudo nala install docker
+COLOR := $(shell tput setaf 5)
+COLOR_RESET := $(shell tput sgr0)
 
-$(DOCKER_COMPOSE): $(DOCKER)
-	sudo nala install ca-certificates curl
+DOCKER_KEYRING_FILE := /etc/apt/keyrings/docker.asc
+DOCKER_SOURCES_FILE := /etc/apt/sources.list.d/docker.list
+
+$(DOCKER_KEYRING_FILE): ca-certificates curl
 	sudo install -m 0755 -d /etc/apt/keyrings
-	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-	sudo chmod a+r /etc/apt/keyrings/docker.asc
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-				$(. /etc/os-release && echo "\$VERSION_CODENAME") stable" | \
+	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o $@
+	sudo chmod a+r $@
+
+OS_ARCH := $(shell dpkg --print-architecture)
+OS_VERSION_CODENAME := $(shell bash ./get-version-codename.sh)
+$(DOCKER_SOURCES_FILE): $(DOCKER_KEYRING_FILE)
+	echo "deb [arch=$(OS_ARCH) signed-by=$(DOCKER_KEYRING_FILE)] https://download.docker.com/linux/ubuntu $(OS_VERSION_CODENAME) stable" | \
 				sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	sudo nala update
+
+$(DOCKER): $(DOCKER_SOURCES_FILE) nala-upgrade
+	sudo nala install docker-ce
+
+$(DOCKER_COMPOSE): $(DOCKER_SOURCES_FILE) nala-upgrade
 	sudo nala install docker-compose-plugin
 
 install-ubuntu-tools: $(GIT) $(DOCKER_COMPOSE)
 	@echo "Все необходимые инструменты установлены"
 
 help:
-	@echo "Пожалуйста, прочтите Readme.md файл, раздел 'Настройка окружения'"
+	@echo -e "$(COLOR)Пожалуйста, прочтите Readme.md файл, раздел 'Настройка окружения'$(COLOR_RESET)"
