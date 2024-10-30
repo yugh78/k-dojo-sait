@@ -1,4 +1,4 @@
-.PHONY: default run start-db stop-db restart-db nala-upgrade install-python-deps install-ubuntu-tools help
+.PHONY: default run-server start-db stop-db restart-db nala-upgrade install-python-deps install-ubuntu-tools help
 
 default: help
 
