@@ -1,25 +1,29 @@
-.PHONY: default run-server restart-db nala-upgrade install-python-deps install-ubuntu-tools help \
-	db-start db-stop db-restart db-clear
+.PHONY: default nala-upgrade help \
+	db-start db-stop db-restart db-clear db-migrate \
+	server-setup server-run server-format \
+	tools-install-ubuntu-wsl
 
 default: help
-
-##= Run
 
 ENV_FILE := ./.env
 
 $(ENV_FILE):
 	cp ./examples/example.env $@
-	@echo "Environment file ('$@') is created, you should edit it"
+	@echo "$(COLOR)Environment file ('$@') is created, you should edit it$(COLOR_RESET)"
 
-install-python-deps:
+#= SERVER
+
+server-setup:
 	pip install -r ./server/requirements.txt
 
-run-server: format
+server-run: format
 	source $(ENV_FILE) && \
 	python ./server/manage.py runserver
 
-format:
+server-format:
 	python -m black ./server
+
+#= DATABASE
 
 db-start: $(ENV_FILE)
 	source $(ENV_FILE) && \
@@ -34,11 +38,10 @@ db-clear: db-stop
 
 db-restart: stop-db start-db
 
-migrate-db:
+db-migrate:
 	source $(ENV_FILE) && \
 		cd ./server/ && \
 		python manage.py migrate
-
 
 ##= Setup
 
@@ -73,7 +76,7 @@ $(DOCKER_KEYRING_FILE): ca-certificates curl
 	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o $@
 	sudo chmod a+r $@
 
-OS_ARCH := $(shell dpkg --print-architecture)
+OS_ARCH = $(shell dpkg --print-architecture)
 OS_VERSION_CODENAME := $(shell bash ./get-version-codename.sh)
 $(DOCKER_SOURCES_FILE): $(DOCKER_KEYRING_FILE)
 	echo "deb [arch=$(OS_ARCH) signed-by=$(DOCKER_KEYRING_FILE)] https://download.docker.com/linux/ubuntu $(OS_VERSION_CODENAME) stable" | \
@@ -85,7 +88,7 @@ $(DOCKER): $(DOCKER_SOURCES_FILE) nala-upgrade
 $(DOCKER_COMPOSE): $(DOCKER_SOURCES_FILE) nala-upgrade
 	sudo nala install docker-compose-plugin
 
-install-ubuntu-tools: $(GIT) $(DOCKER_COMPOSE)
+tools-install-ubuntu-wsl: $(GIT) $(DOCKER_COMPOSE)
 	@echo "Все необходимые инструменты установлены"
 
 help:
