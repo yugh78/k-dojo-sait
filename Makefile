@@ -1,9 +1,13 @@
+COLOR := $(shell tput setaf 5)
+COLOR_RESET := $(shell tput sgr0)
+
 .PHONY: default nala-upgrade help \
 	db-start db-stop db-restart db-clear db-migrate \
 	server-setup server-run server-format \
 	tools-install-ubuntu-wsl
 
 default: help
+	@echo -e "$(COLOR)Не запускайте make без указания целей$(COLOR_RESET)"
 
 ENV_FILE := ./.env
 
@@ -65,8 +69,6 @@ ca-certificates curl: $(NALA)
 $(GIT): nala-upgrade
 	sudo nala install git
 
-COLOR := $(shell tput setaf 5)
-COLOR_RESET := $(shell tput sgr0)
 
 DOCKER_KEYRING_FILE := /etc/apt/keyrings/docker.asc
 DOCKER_SOURCES_FILE := /etc/apt/sources.list.d/docker.list
