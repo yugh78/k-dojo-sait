@@ -21,3 +21,12 @@ class Request(models.Model):
 
     def __str__(self):
         return self.name
+
+class Trainer(models.Modlel):
+    name = models.CharField(max_length=100)
+    bio = models.TextField()
+    photo = models.ImageField(upload_to='trainers/', blank=True, null=True)
+    
+
+    def __str__(self):
+        return self.name
