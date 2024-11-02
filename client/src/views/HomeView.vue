@@ -25,7 +25,7 @@ let name = ref('');
 let phone = ref('');
 let message = ref('');
 
-const subm = async () => {
+const subm = () => {
   // Проверка на заполненность полей
   if (!name.value || !phone.value || !message.value) {
     console.error('Все поля должны быть заполнены.');
@@ -37,30 +37,24 @@ const subm = async () => {
     phone: phone.value,
     message: message.value,
   };
+    console.log(data);
+  const jsonData = JSON.stringify(data);
 
-  try {
     // Отправляем POST-запрос на сервер
-    const response = await fetch('http://127.0.0.1:8000/applications/create/', {
+  fetch('http://127.0.0.1:8000/applications/create/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',  // Указываем, что отправляем JSON
       },
-      body: JSON.stringify(data),  // Преобразуем объект в JSON
-    });
-
-    // Обрабатываем ответ сервера
-    if (response.ok) {
-      const result = await response.json();
-      console.log('Ответ сервера:', result);
-      // Здесь можно показать сообщение об успешной отправке
-    } else {
-      console.error('Ошибка при отправке данных:', response.status);
-      // Обработать ошибку, например показать пользователю сообщение
+      body: jsonData,  // Преобразуем объект в JSON
+  }).then(res => {
+    if (!res.ok) {
+        return Promise.reject()
     }
-  } catch (error) {
-    console.error('Ошибка:', error);
+    return res;
+  }).then(res => console.log("All cool!"))
+  .catch(err => {console.log("Error!");console.log(err);});
     // Обработать ошибку (например, проблемы с сетью)
-  }
 };
 </script>
 
