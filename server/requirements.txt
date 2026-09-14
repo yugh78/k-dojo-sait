@@ -1,4 +1,7 @@
-Django
-git+https://github.com/psf/black
-psycopg2-binary
-django-cors-headers
+Django>=5.2.13,<5.3
+djangorestframework>=3.16,<4
+psycopg[binary]>=3.2,<4
+Pillow>=11.3
+whitenoise>=6.9,<7
+gunicorn>=23,<24; sys_platform != 'win32'
+ruff>=0.12
