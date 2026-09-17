@@ -10,13 +10,23 @@ import type {
   SiteSettings,
 } from "~/types/api";
 usePageSeo("Спортивный клуб в Королёве");
-const { data: programs, error } = await useClubApi<Program[]>("programs");
-const { data: coaches } = await useClubApi<Coach[]>("coaches");
-const { data: events } = await useClubApi<ClubEvent[]>("events");
-const { data: results } = await useClubApi<Result[]>("results");
-const { data: schedule } = await useClubApi<ScheduleEntry[]>("schedule");
-const { data: pricing } = await useClubApi<PricingPlan[]>("pricing");
-const { data: faq } = await useClubApi<FAQ[]>("faq");
+const [
+  { data: programs, error },
+  { data: coaches },
+  { data: events },
+  { data: results },
+  { data: schedule },
+  { data: pricing },
+  { data: faq },
+] = await Promise.all([
+  useClubApi<Program[]>("programs"),
+  useClubApi<Coach[]>("coaches"),
+  useClubApi<ClubEvent[]>("events"),
+  useClubApi<Result[]>("results"),
+  useClubApi<ScheduleEntry[]>("schedule"),
+  useClubApi<PricingPlan[]>("pricing"),
+  useClubApi<FAQ[]>("faq"),
+]);
 const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
 const config = useRuntimeConfig();
 useHead({

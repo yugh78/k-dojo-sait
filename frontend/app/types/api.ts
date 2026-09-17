@@ -41,10 +41,10 @@ export interface Location {
 }
 export interface ScheduleEntry {
   id: number;
-  program: Program;
+  program: Pick<Program, "id" | "name" | "slug" | "accent">;
   training_group: { id: number; name: string };
   location: Location | null;
-  coaches: Coach[];
+  coaches: Pick<Coach, "id" | "full_name" | "slug">[];
   weekday: number;
   start_time: string;
   end_time: string;

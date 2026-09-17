@@ -19,10 +19,17 @@ usePageSeo(
   program.value?.name + " в Королёве",
   program.value?.short_description,
 );
-const { data: coaches } = await useClubApi<Coach[]>("coaches");
-const { data: faq } = await useClubApi<FAQ[]>("faq");
-const { data: schedule } = await useClubApi<ScheduleEntry[]>("schedule");
-const { data: pricing } = await useClubApi<PricingPlan[]>("pricing");
+const [
+  { data: coaches },
+  { data: faq },
+  { data: schedule },
+  { data: pricing },
+] = await Promise.all([
+  useClubApi<Coach[]>("coaches"),
+  useClubApi<FAQ[]>("faq"),
+  useClubApi<ScheduleEntry[]>("schedule"),
+  useClubApi<PricingPlan[]>("pricing"),
+]);
 </script>
 <template>
   <div class="container">

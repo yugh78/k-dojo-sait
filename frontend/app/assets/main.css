@@ -459,7 +459,8 @@ h3 {
   margin-left: 12px;
 }
 .media-placeholder small {
-  font-size: 8px;
+  color: #53554f;
+  font-size: 11px;
   letter-spacing: 0.1em;
 }
 .gold .media-placeholder {

@@ -25,3 +25,27 @@ class LegacyMigrationTests(TransactionTestCase):
             self.assertEqual(saved.status, "new")
         finally:
             MigrationExecutor(connection).migrate(latest)
+
+    def test_guard_refuses_nonempty_pre_0003_database(self):
+        from django.core.management import call_command, CommandError
+
+        executor = MigrationExecutor(connection)
+        latest = executor.loader.graph.leaf_nodes()
+        old = [("myapp", "0002_request")]
+        executor.migrate(old)
+        apps = executor.loader.project_state(old).apps
+        legacy = apps.get_model("myapp", "Request").objects.create(
+            name="Legacy",
+            phone="123",
+            email="test@example.invalid",
+            subject="Keep subject",
+            description="Keep description",
+        )
+        try:
+            with self.assertRaises(CommandError):
+                call_command("safe_migrate")
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT description FROM myapp_request WHERE id = %s", [legacy.pk])
+                self.assertEqual(cursor.fetchone()[0], "Keep description")
+        finally:
+            MigrationExecutor(connection).migrate(latest)

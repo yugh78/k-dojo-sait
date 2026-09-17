@@ -21,7 +21,7 @@ const links = [
 </script>
 <template>
   <header class="site-header">
-    <NuxtLink class="brand" to="/" aria-label="K-Dojo — главная"
+    <NuxtLink class="brand" to="/"
       >K–DOJO<span>СПОРТИВНЫЙ КЛУБ · КОРОЛЁВ</span></NuxtLink
     >
     <nav class="desktop-nav" aria-label="Основная навигация">

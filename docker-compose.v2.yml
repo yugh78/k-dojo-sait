@@ -1,0 +1,66 @@
+name: kdojo-v2
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-kdojo_v2}
+      POSTGRES_USER: ${POSTGRES_USER:-kdojo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - kdojo-v2-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+  backend:
+    build: ./server
+    env_file: .env
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DJANGO_DEBUG: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - kdojo-v2-media:/app/media
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8000/api/health/',headers={'X-Forwarded-Proto':'https','Host':'localhost'}))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  frontend:
+    build: ./frontend
+    environment:
+      NUXT_API_BASE: http://backend:8000
+      NUXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN:?Set SITE_DOMAIN}
+      HOST: 0.0.0.0
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+  proxy:
+    image: caddy:2-alpine
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?Set SITE_DOMAIN}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - kdojo-v2-media:/srv/media:ro
+      - kdojo-v2-caddy:/data
+      - kdojo-v2-caddy-config:/config
+    depends_on: [frontend]
+    restart: unless-stopped
+volumes:
+  kdojo-v2-db:
+  kdojo-v2-media:
+  kdojo-v2-caddy:
+  kdojo-v2-caddy-config:

@@ -12,7 +12,13 @@ if not SECRET_KEY:
         raise ImproperlyConfigured("DJANGO_SECRET_KEY is required")
     SECRET_KEY = "local-development-only-not-for-production"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-CSRF_TRUSTED_ORIGINS = [x for x in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if x]
+CSRF_TRUSTED_ORIGINS = [
+    x
+    for x in os.getenv(
+        "CSRF_TRUSTED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000" if DEBUG else ""
+    ).split(",")
+    if x
+]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -53,7 +59,12 @@ WSGI_APPLICATION = "k_dojo.wsgi.application"
 if os.getenv("USE_SQLITE") == "true":
     if not DEBUG:
         raise ImproperlyConfigured("SQLite is for local development only")
-    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "dev-v2.sqlite3"}}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.getenv("SQLITE_DATABASE_PATH", str(BASE_DIR / "dev-v2.sqlite3")),
+        }
+    }
 else:
     DATABASES = {
         "default": {
@@ -105,3 +116,5 @@ REST_FRAMEWORK = {
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.db.DatabaseCache", "LOCATION": "kdojo_cache"}}
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+
+CSRF_FAILURE_VIEW = "myapp.api.csrf_failure"

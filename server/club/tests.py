@@ -99,3 +99,78 @@ class PublicAPITests(TestCase):
         p.refresh_from_db()
         self.assertEqual(p.price, 123)
         self.assertEqual(m.ScheduleEntry.objects.count(), 24)
+
+    def test_draft_nested_gallery_hidden_and_media_urls_relative(self):
+        album = m.GalleryAlbum.objects.create(title="Draft", slug="private", category="club")
+        m.Event.objects.create(
+            title="Public",
+            slug="public",
+            start_date=date.today(),
+            event_type="club",
+            is_published=True,
+            gallery=album,
+        )
+        self.assertIsNone(self.client.get("/api/events/public/").json()["gallery"])
+        program = m.Program.objects.get(slug="bjj")
+        program.image = "programs/test.webp"
+        program.save()
+        self.assertEqual(self.client.get("/api/programs/bjj/").json()["image"], "/media/programs/test.webp")
+
+    def test_notification_failure_preserves_application(self):
+        from unittest.mock import patch
+
+        with override_settings(TELEGRAM_BOT_TOKEN="test-token", TELEGRAM_CHAT_ID="test-chat"):
+            with patch("myapp.notifications.TelegramProvider.send", side_effect=RuntimeError("unavailable")):
+                with self.captureOnCommitCallbacks(execute=True):
+                    self.assertEqual(self.application().status_code, 201)
+        self.assertEqual(Request.objects.count(), 1)
+
+    def test_production_legal_configuration(self):
+        with override_settings(DEBUG=False):
+            self.assertEqual(self.application().status_code, 503)
+            site = m.SiteSettings.objects.get()
+            site.legal_ready = True
+            site.privacy_text = "Test policy"
+            site.consent_text = "Test consent"
+            site.save()
+            self.assertEqual(self.application().status_code, 201)
+
+
+@override_settings(DEBUG=True)
+class AdminAccessTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        from django.contrib.auth import get_user_model
+
+        cls.owner = get_user_model().objects.create_superuser(
+            username="test-owner", email="owner@example.invalid", password="test-only-password"
+        )
+        cls.staff = get_user_model().objects.create_user(
+            username="test-staff", password="test-only-password", is_staff=True
+        )
+        call_command("seed_club", verbosity=0)
+        cls.application = Request.objects.create(name="Admin test", phone="+79990000000", message="Keep")
+
+    def test_owner_can_open_content_forms_but_cannot_delete_requests(self):
+        from django.contrib import admin
+        from django.urls import reverse
+
+        self.client.force_login(self.owner)
+        for model in admin.site._registry:
+            meta = model._meta
+            if meta.app_label not in {"club", "myapp"}:
+                continue
+            route = f"admin:{meta.app_label}_{meta.model_name}"
+            with self.subTest(model=meta.label):
+                self.assertEqual(self.client.get(reverse(route + "_changelist")).status_code, 200)
+                obj = model.objects.first()
+                form = reverse(route + "_change", args=[obj.pk]) if obj else reverse(route + "_add")
+                self.assertEqual(self.client.get(form).status_code, 200)
+        deletion = reverse("admin:myapp_request_delete", args=[self.application.pk])
+        self.assertEqual(self.client.post(deletion, {"post": "yes"}).status_code, 403)
+        self.assertTrue(Request.objects.filter(pk=self.application.pk).exists())
+
+    def test_staff_requires_model_permissions(self):
+        self.client.force_login(self.staff)
+        self.assertEqual(self.client.get("/admin/club/program/").status_code, 403)
+        self.assertEqual(self.client.get("/admin/myapp/request/").status_code, 403)

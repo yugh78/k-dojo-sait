@@ -18,7 +18,9 @@ defineProps<{ program: Program; index?: number }>();
             ? "KYOKUSHIN"
             : program.slug === "bjj"
               ? "BJJ / GRAPPLING"
-              : "МАУГЛИ"
+              : program.slug === "mowgli"
+                ? "МАУГЛИ"
+                : program.name
         }}
       </h3>
       <p>{{ program.short_description }}</p>

@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, ImageField
 from django.utils import timezone
 from rest_framework import serializers, viewsets
 from rest_framework.exceptions import ValidationError
@@ -23,6 +23,8 @@ def public(model):
         qs = qs.filter(is_active=True)
     if "is_published" in fields:
         qs = qs.filter(is_published=True)
+    if "program" in fields:
+        qs = qs.filter(Q(program__isnull=True) | Q(program__is_active=True, program__is_demo=False))
     if "valid_from" in fields:
         today = timezone.localdate()
         qs = qs.filter(
@@ -32,10 +34,37 @@ def public(model):
     return qs
 
 
+class PublicImageField(serializers.ImageField):
+    def to_representation(self, value):
+        return value.url if value else None
+
+
+class PublicSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        for relation in instance._meta.many_to_many:
+            if (
+                relation.name in data
+                and relation.related_model == m.Program
+                and not isinstance(self, CoachSerializer)
+            ):
+                data[relation.name] = list(
+                    getattr(instance, relation.name)
+                    .filter(is_demo=False, is_active=True)
+                    .values_list("pk", flat=True)
+                )
+        return data
+
+    serializer_field_mapping = {
+        **serializers.ModelSerializer.serializer_field_mapping,
+        ImageField: PublicImageField,
+    }
+
+
 def serializer(model, fields):
     return type(
         model.__name__ + "Serializer",
-        (serializers.ModelSerializer,),
+        (PublicSerializer,),
         {"Meta": type("Meta", (), {"model": model, "fields": fields})},
     )
 
@@ -61,8 +90,12 @@ ProgramSerializer = serializer(
 CertificateSerializer = serializer(m.Certificate, ["id", "title", "image"])
 
 
-class CoachSerializer(serializers.ModelSerializer):
-    programs = serializers.SlugRelatedField(many=True, read_only=True, slug_field="slug")
+class CoachSerializer(PublicSerializer):
+    programs = serializers.SerializerMethodField()
+
+    def get_programs(self, obj):
+        return list(obj.programs.filter(is_demo=False, is_active=True).values_list("slug", flat=True))
+
     certificates = serializers.SerializerMethodField()
 
     def get_certificates(self, obj):
@@ -108,9 +141,13 @@ GroupSerializer = serializer(
 )
 
 
-class ScheduleSerializer(serializers.ModelSerializer):
-    program = ProgramSerializer(read_only=True)
-    coaches = CoachSerializer(many=True, read_only=True)
+ScheduleProgramSerializer = serializer(m.Program, ["id", "name", "slug", "accent"])
+ScheduleCoachSerializer = serializer(m.Coach, ["id", "full_name", "slug"])
+
+
+class ScheduleSerializer(PublicSerializer):
+    program = ScheduleProgramSerializer(read_only=True)
+    coaches = ScheduleCoachSerializer(many=True, read_only=True)
     location = LocationSerializer(read_only=True)
     training_group = GroupSerializer(read_only=True)
 
@@ -165,7 +202,7 @@ DiscountSerializer = serializer(
 ImageSerializer = serializer(m.GalleryImage, ["id", "image", "image_webp", "image_avif", "caption"])
 
 
-class GallerySerializer(serializers.ModelSerializer):
+class GallerySerializer(PublicSerializer):
     images = serializers.SerializerMethodField()
 
     def get_images(self, obj):
@@ -176,9 +213,14 @@ class GallerySerializer(serializers.ModelSerializer):
         fields = ["id", "title", "slug", "category", "cover", "images"]
 
 
-class EventSerializer(serializers.ModelSerializer):
+class EventSerializer(PublicSerializer):
     program = serializers.SlugRelatedField(read_only=True, slug_field="slug")
-    gallery = GallerySerializer(read_only=True)
+    gallery = serializers.SerializerMethodField()
+
+    def get_gallery(self, obj):
+        if obj.gallery and obj.gallery.is_published and not obj.gallery.is_demo:
+            return GallerySerializer(obj.gallery, context=self.context).data
+        return None
 
     class Meta:
         model = m.Event
@@ -208,7 +250,7 @@ CompetitionSerializer = serializer(
 )
 
 
-class ResultSerializer(serializers.ModelSerializer):
+class ResultSerializer(PublicSerializer):
     athlete = AthleteSerializer(read_only=True)
     competition = CompetitionSerializer(read_only=True)
 

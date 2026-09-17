@@ -1,0 +1,55 @@
+name: K-Dojo checks
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: kdojo_test
+          POSTGRES_USER: kdojo
+          POSTGRES_PASSWORD: ci-only-password
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U kdojo -d kdojo_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DJANGO_DEBUG: 'true'
+      POSTGRES_DB: kdojo_test
+      POSTGRES_USER: kdojo
+      POSTGRES_PASSWORD: ci-only-password
+      DATABASE_HOST: localhost
+      DATABASE_PORT: '5432'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pip install -r server/requirements.lock
+      - run: python -m ruff check server scripts/check_postgres.py
+      - run: python -m ruff format --check server scripts/check_postgres.py
+      - run: python server/manage.py check
+      - run: python server/manage.py test club myapp
+      - run: python server/manage.py makemigrations --check --dry-run
+      - run: pnpm --dir frontend install --frozen-lockfile
+      - run: pnpm --dir frontend lint
+      - run: pnpm --dir frontend format:check
+      - run: pnpm --dir frontend typecheck
+      - run: pnpm --dir frontend test
+      - run: pnpm --dir frontend build
+      - run: pnpm --dir frontend exec playwright install --with-deps chromium
+      - run: pnpm --dir frontend test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-test-results
+          path: frontend/test-results/

@@ -104,3 +104,7 @@ def create_application(request):
     return Response(
         {"id": application.pk, "message": "Спасибо! Заявка сохранена. Мы свяжемся с вами."}, status=201
     )
+
+
+def csrf_failure(request, reason=""):
+    return JsonResponse({"errors": {"csrf": "Обновите страницу и отправьте форму снова."}}, status=403)
