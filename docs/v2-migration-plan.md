@@ -33,3 +33,7 @@ https://www.djangoproject.com/download/
 
 ## Pending owner content
 Real photography, coach credentials/biographies, Mowgli certificate, non-BJJ addresses, club history, results/events, equipment instructions and legal operator details. Do not fabricate these.
+
+## Verification after implementation
+
+See [v2 verification report](v2-verification.md) for the implemented scope, tests, PostgreSQL backup/restore rehearsal and remaining deployment limits. Native PostgreSQL 17.11 passed all 17 backend tests and a synthetic-data restore comparison. The real legacy database and Docker volumes still require inspection on their actual host; they have not been migrated or removed.

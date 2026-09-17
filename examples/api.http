@@ -1,10 +1,10 @@
 @host=http://127.0.0.1:8000
 
-POST {{host}}/applications/create/
-Content-Type: application/json
+# Fetch CSRF cookie and token first; send both on POST.
+GET {{host}}/api/csrf/
 
-{
-    "name": "Cool",
-    "phone": "88005553535",
-    "message": "Fuck"
-}
+### Public schedule
+GET {{host}}/api/schedule/?program=bjj
+
+### Public prices
+GET {{host}}/api/pricing/
