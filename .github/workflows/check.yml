@@ -35,8 +35,8 @@ jobs:
           cache: pnpm
           cache-dependency-path: frontend/pnpm-lock.yaml
       - run: pip install -r server/requirements.lock
-      - run: python -m ruff check server scripts/check_postgres.py
-      - run: python -m ruff format --check server scripts/check_postgres.py
+      - run: python -m ruff check server scripts
+      - run: python -m ruff format --check server scripts
       - run: python server/manage.py check
       - run: python server/manage.py test club myapp
       - run: python server/manage.py makemigrations --check --dry-run

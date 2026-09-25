@@ -22,6 +22,7 @@ services:
       DATABASE_PORT: 5432
       DJANGO_DEBUG: "false"
       DJANGO_HTTPS: "true"
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1},backend,localhost
     depends_on:
       db:
         condition: service_healthy

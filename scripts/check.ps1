@@ -5,9 +5,9 @@ $nodeDir = Get-ChildItem "$repo/.tools" -Directory -Filter 'node-*-win-x64' | Se
 if ($nodeDir) { $env:Path = "$($nodeDir.FullName);$repo/.tools/python;$repo/.tools/pnpm/node_modules/.bin;" + $env:Path }
 $env:DJANGO_DEBUG = 'true'
 $env:USE_SQLITE = 'true'
-python -m ruff check server scripts/check_postgres.py
+python -m ruff check server scripts
 if ($LASTEXITCODE) { exit $LASTEXITCODE }
-python -m ruff format --check server scripts/check_postgres.py
+python -m ruff format --check server scripts
 if ($LASTEXITCODE) { exit $LASTEXITCODE }
 python server/manage.py check
 if ($LASTEXITCODE) { exit $LASTEXITCODE }

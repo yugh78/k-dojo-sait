@@ -3,7 +3,7 @@
 	request_body {
 		max_size 6MB
 	}
-	@backend path /api/* /admin/* /static/* /applications/*
+	@backend path /api /api/* /admin /admin/* /static /static/* /applications /applications/*
 	handle @backend {
 		reverse_proxy backend:8000 {
 			header_up X-Real-IP {remote_host}

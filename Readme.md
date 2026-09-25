@@ -299,6 +299,8 @@ pnpm --dir frontend test:e2e
 
 Windows: `scripts/check.ps1` настраивает локальные инструменты и запускает проверки по порядку. E2E самостоятельно создаёт отдельную базу с уникальным именем в .tools/e2e/, применяет миграции и seed_club. Тестовые серверы используют порты 13000 и 18000. Обычная development-БД и её заявки не затрагиваются; повторный запуск получает новую базу.
 
+После запуска Docker выполните `python scripts/check_http.py` (для другого порта: `python scripts/check_http.py --url http://localhost:8081`). Проверка читает страницы и API, проверяет данные в серверном HTML, админку, статику, ответы 404 и sitemap. Данные не изменяются. Внутреннее имя `backend` добавляется в разрешённые хосты Django обеими Compose-конфигурациями для запросов Nuxt к API.
+
 Playwright запускает реальный Django и production-сборку Nuxt. Проверяются основные страницы, фильтрация, меню, валидация, сохранение формы, 404, SSR metadata, robots/sitemap и отсутствие overflow на 320/360/375/390/430/768/1024/1280/1440 px. Скриншоты сохраняются в frontend/test-results/. CI дополнительно выполняет backend-тесты на PostgreSQL 17.
 
 Проверка локальной production-сборки 17.09.2026 через Caddy со сжатием: **Lighthouse Performance 97, Accessibility 100, Best Practices 100, SEO 100**. Mobile simulation: FCP 2,0 с, LCP 2,0 с, TBT 90 мс, CLS 0. Подробности и границы проверки: [отчёт](docs/v2-verification.md).

@@ -10,10 +10,13 @@ const props = defineProps<{ slug: string }>();
 const { data: program, error } = await useClubApi<Program>(
   `programs/${props.slug}`,
 );
-if (!program.value && error.value?.statusCode === 404)
+if (!program.value)
   throw createError({
-    statusCode: 404,
-    statusMessage: "Направление не найдено",
+    statusCode: error.value?.statusCode === 404 ? 404 : 503,
+    statusMessage:
+      error.value?.statusCode === 404
+        ? "Направление не найдено"
+        : "Направление временно недоступно",
   });
 usePageSeo(
   program.value?.name + " в Королёве",
