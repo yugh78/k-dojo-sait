@@ -2,17 +2,130 @@
 
 Спортивный клуб в Королёве: Киокусинкай, BJJ / грэпплинг и «Маугли».
 
+## Быстрый запуск через консоль Windows
+
+Нужны установленный Docker Desktop с Linux-контейнерами и PowerShell (подойдёт терминал в VS Code). Для Docker-запуска устанавливать Python, Node.js и pnpm на компьютер не требуется.
+
+**На этой машине `.env` уже настроен.** Откройте PowerShell и выполните команды по порядку:
+
+```powershell
+cd A:\projects\k-dojo-sait
+docker desktop start
+docker version
+powershell -ExecutionPolicy Bypass -File .\scripts\docker-up.ps1
+```
+
+В выводе `docker version` должны быть разделы `Client` и `Server` без ошибок. Дождитесь завершения скрипта: он соберёт образы, запустит PostgreSQL, применит миграции, добавит начальные данные клуба и запустит сайт. Первая сборка требует интернета и может занять несколько минут. Контейнеры работают в фоне — терминал можно закрыть.
+
+Откройте **[сайт](https://localhost)** или **[админку](https://localhost/admin/)**. Для localhost используется локальный сертификат Caddy, поэтому браузер может показать предупреждение о доверии.
+
+Во всех командах проекта используется **`-f docker-compose.v2.yml`**. Файл `docker-compose.yml` относится к старой базе и для запуска текущего сайта не используется.
+
+## Повседневные команды
+
+Выполняйте из папки проекта. Docker Desktop должен быть запущен.
+
+**Запустить уже собранный сайт**, например после перезагрузки компьютера:
+
+```powershell
+docker desktop start
+docker compose -f docker-compose.v2.yml up -d --wait
+```
+
+**Пересобрать после изменения кода** и применить новые миграции:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\docker-up.ps1
+```
+
+**Остановить сайт**, сохранив базу и загруженные фотографии:
+
+```powershell
+docker compose -f docker-compose.v2.yml stop
+```
+
+**Посмотреть состояние контейнеров:**
+
+```powershell
+docker compose -f docker-compose.v2.yml ps
+```
+
+Ожидаются четыре сервиса: `db`, `backend`, `frontend`, `proxy`. У первых трёх после запуска должен появиться статус `healthy`, у `proxy` — `Up`.
+
+**Посмотреть логи в реальном времени:**
+
+```powershell
+docker compose -f docker-compose.v2.yml logs -f --tail 100
+```
+
+`Ctrl+C` завершает просмотр логов; сайт продолжает работать. Для логов только Django добавьте `backend` в конец команды.
+
+**Создать администратора** после первого запуска:
+
+```powershell
+docker compose -f docker-compose.v2.yml exec backend python manage.py createsuperuser
+```
+
+Введите имя, email и пароль по подсказкам. Символы пароля в терминале не отображаются — это нормально. Затем войдите на https://localhost/admin/.
+
+Данные хранятся в Docker volumes и сохраняются при остановке и пересборке. Не используйте `down -v`: эта команда удаляет volumes проекта вместе с данными.
+
+## Первый запуск на новом компьютере
+
+Откройте PowerShell в папке скачанного проекта. Если `.env` ещё нет, создайте его из шаблона:
+
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+notepad .env
+```
+
+Для локального запуска заполните следующие поля, остальные оставьте как в шаблоне:
+
+```dotenv
+DJANGO_SECRET_KEY=вставьте_первый_сгенерированный_секрет
+POSTGRES_PASSWORD=вставьте_второй_сгенерированный_секрет
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+SITE_DOMAIN=localhost
+NUXT_PUBLIC_SITE_URL=https://localhost
+CSRF_TRUSTED_ORIGINS=https://localhost
+```
+
+Для каждого из двух секретов отдельно выполните в PowerShell и скопируйте полученную строку в соответствующее поле `.env`:
+
+```powershell
+$bytes = New-Object byte[] 48
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+[Convert]::ToBase64String($bytes)
+$rng.Dispose()
+```
+
+Сохраните `.env`, закройте редактор и выполните команды из раздела «Быстрый запуск» начиная с `docker desktop start`. `.env` не попадает в Git. После создания базы не меняйте `POSTGRES_PASSWORD` только в этом файле: пароль существующей базы автоматически не обновится.
+
+## Если запуск не получается
+
+| Что видите | Что сделать |
+|---|---|
+| `docker` не найден | Установите Docker Desktop и заново откройте терминал. |
+| `docker desktop start` не поддерживается | Откройте Docker Desktop через меню «Пуск», дождитесь запуска Engine и повторите `docker version`. |
+| В `docker version` нет работающего `Server` | Дождитесь запуска Docker Desktop; если ошибка остаётся, проверьте сообщение в его окне. |
+| Ошибка про `.env`, `POSTGRES_PASSWORD` или `SITE_DOMAIN` | Заполните `.env` по разделу первого запуска. |
+| Порт 80 или 443 занят | Остановите другую программу, использующую этот порт, и повторите запуск. |
+| Контейнер `unhealthy` или сайт не открывается | Выполните команды `ps` и `logs -f --tail 100` выше: логи покажут причину. |
+
 ## Архитектура
 
-- `frontend/`: Nuxt 4 SSR, Vue 3, строгий TypeScript, pnpm. Файловая маршрутизация, метаданные, sitemap и robots. Расписание, цены, FAQ, тренеры и события поступают из API.
-- `server/club/`: контент клуба, Django Admin, публичный read-only REST API.
-- `server/myapp/`: сохранённые таблицы Product и Request; Request расширен полями mini-CRM. История миграций 0001–0003 сохранена.
-- PostgreSQL в production; отдельная SQLite `server/dev-v2.sqlite3` для локальной разработки.
-- Caddy завершает HTTPS и направляет API/admin/static в Django, остальные запросы — в Nuxt. Выбран за автоматические сертификаты и небольшую конфигурацию.
-- `client/` — старый Vue/Vite starter, оставлен как исходный референс; в v2 не используется.
-- `docker-compose.yml` — прежняя конфигурация PostgreSQL, оставлена без изменений. Новая — **docker-compose.v2.yml**.
+- `frontend/`: сайт на Nuxt 4 SSR, Vue 3 и TypeScript; зависимости устанавливаются через pnpm.
+- `server/club/`: контент клуба, Django Admin и публичный REST API.
+- `server/myapp/`: таблицы Product и Request, заявки и поля mini-CRM.
+- PostgreSQL хранит данные в Docker; `server/dev-v2.sqlite3` — отдельная база для разработки без Docker.
+- `deploy/`: Caddy, HTTPS и маршрутизация запросов к Nuxt и Django.
+- `scripts/`: запуск и проверки; `.tools/` используется для локальной разработки без Docker.
+- `docs/`: [описание API](docs/api.md), [примеры запросов](docs/api.http), миграция и результаты проверок.
 
-## Быстрый запуск на этой Windows-машине
+Инструкции ниже нужны для разработки без Docker, публикации на сервере и обслуживания данных.
+
+## Локальный запуск без Docker
 
 Локальные Node/Python/pnpm установлены в игнорируемом `.tools/`. Запустите:
 
@@ -33,7 +146,7 @@ $env:USE_SQLITE='true'
 
 Пароль администратора задайте интерактивно. Он не хранится в Git.
 
-## Установка на другой машине
+## Установка инструментов для разработки без Docker
 
 Требования: Python 3.14, Node.js 24 LTS, pnpm 10.32.1; Docker Compose для production. Версии пакетов зафиксированы в `server/requirements.lock` и `frontend/pnpm-lock.yaml`.
 
@@ -100,7 +213,7 @@ docker compose -f docker-compose.v2.yml up -d
 
 Healthchecks: PostgreSQL pg_isready; Django /api/health/ проверяет SQL-соединение; Nuxt проверяет HTTP-ответ. При остановке Gunicorn получает время на завершение запросов.
 
-**Ограничение проверки текущей машины:** Docker Engine и WSL не обнаружены. Отдельный Compose CLI установлен и проверил синтаксис конфигурации. Docker runtime, настоящие старые volumes и production HTTPS необходимо проверить на Docker-хосте. Наличие старой БД не считается опровергнутым.
+**Проверка Docker (25.09.2026):** Docker Engine запущен, образы backend/frontend собраны, все четыре сервиса работают. PostgreSQL, Django и Nuxt проходят healthcheck. Через Caddy по HTTPS проверены главная, расписание, цены, API, вход в админку, статика и sitemap: HTTP 200. В контейнере пройдены 17 backend-тестов на отдельной тестовой PostgreSQL-БД. Реальные старые БД и публичный HTTPS на домене по-прежнему требуют отдельной проверки.
 
 ## Безопасная миграция старых данных
 
