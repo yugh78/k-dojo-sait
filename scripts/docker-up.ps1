@@ -6,7 +6,7 @@ if (-not (Test-Path -LiteralPath '.env')) {
 }
 
 function Invoke-Compose {
-    docker compose -f docker-compose.v2.yml @args
+    docker compose @args
     if ($LASTEXITCODE -ne 0) {
         throw "Docker Compose failed with exit code $LASTEXITCODE"
     }

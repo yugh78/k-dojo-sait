@@ -1,6 +1,6 @@
 .PHONY: help backend-check frontend-check db-start migrate
 help:
-	@echo "Read Readme.md. v2 uses docker-compose.v2.yml; legacy volumes are retained."
+	@echo "Read Readme.md. Docker uses compose.yml; legacy volumes are retained."
 backend-check:
 	python -m ruff check server
 	python server/manage.py check
@@ -11,6 +11,6 @@ frontend-check:
 	pnpm --dir frontend test
 	pnpm --dir frontend build
 db-start:
-	docker compose -f docker-compose.v2.yml up -d db
+	docker compose up -d db
 migrate:
-	docker compose -f docker-compose.v2.yml run --rm backend python manage.py safe_migrate
+	docker compose run --rm backend python manage.py safe_migrate

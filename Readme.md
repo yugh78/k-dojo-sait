@@ -19,7 +19,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\docker-up.ps1
 
 Откройте **[сайт](https://localhost)** или **[админку](https://localhost/admin/)**. Для localhost используется локальный сертификат Caddy, поэтому браузер может показать предупреждение о доверии.
 
-Во всех командах проекта используется **`-f docker-compose.v2.yml`**. Файл `docker-compose.yml` относится к старой базе и для запуска текущего сайта не используется.
+Docker автоматически использует **`compose.yml`** из папки проекта — параметр `-f` не нужен. Имя проекта `kdojo-v2` и имена volumes сохранены, поэтому используются прежние данные. Старая конфигурация PostgreSQL доступна в истории Git.
 
 ## Повседневные команды
 
@@ -29,7 +29,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\docker-up.ps1
 
 ```powershell
 docker desktop start
-docker compose -f docker-compose.v2.yml up -d --wait
+docker compose up -d --wait
 ```
 
 **Пересобрать после изменения кода** и применить новые миграции:
@@ -41,13 +41,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\docker-up.ps1
 **Остановить сайт**, сохранив базу и загруженные фотографии:
 
 ```powershell
-docker compose -f docker-compose.v2.yml stop
+docker compose stop
 ```
 
 **Посмотреть состояние контейнеров:**
 
 ```powershell
-docker compose -f docker-compose.v2.yml ps
+docker compose ps
 ```
 
 Ожидаются четыре сервиса: `db`, `backend`, `frontend`, `proxy`. У первых трёх после запуска должен появиться статус `healthy`, у `proxy` — `Up`.
@@ -55,7 +55,7 @@ docker compose -f docker-compose.v2.yml ps
 **Посмотреть логи в реальном времени:**
 
 ```powershell
-docker compose -f docker-compose.v2.yml logs -f --tail 100
+docker compose logs -f --tail 100
 ```
 
 `Ctrl+C` завершает просмотр логов; сайт продолжает работать. Для логов только Django добавьте `backend` в конец команды.
@@ -63,7 +63,7 @@ docker compose -f docker-compose.v2.yml logs -f --tail 100
 **Создать администратора** после первого запуска:
 
 ```powershell
-docker compose -f docker-compose.v2.yml exec backend python manage.py createsuperuser
+docker compose exec backend python manage.py createsuperuser
 ```
 
 Введите имя, email и пароль по подсказкам. Символы пароля в терминале не отображаются — это нормально. Затем войдите на https://localhost/admin/.
@@ -199,14 +199,14 @@ pnpm --dir frontend dev
 Новая конфигурация использует отдельный Compose project `kdojo-v2` и новые volumes. Она не подключает `dsf-data`.
 
 ```sh
-docker compose -f docker-compose.v2.yml config --quiet
-docker compose -f docker-compose.v2.yml build
-docker compose -f docker-compose.v2.yml up -d db
-docker compose -f docker-compose.v2.yml run --rm backend python manage.py safe_migrate
-docker compose -f docker-compose.v2.yml run --rm backend python manage.py seed_club
-docker compose -f docker-compose.v2.yml run --rm backend python manage.py createsuperuser
-docker compose -f docker-compose.v2.yml run --rm backend python manage.py check --deploy
-docker compose -f docker-compose.v2.yml up -d
+docker compose config --quiet
+docker compose build
+docker compose up -d db
+docker compose run --rm backend python manage.py safe_migrate
+docker compose run --rm backend python manage.py seed_club
+docker compose run --rm backend python manage.py createsuperuser
+docker compose run --rm backend python manage.py check --deploy
+docker compose up -d
 ```
 
 Миграции выполняются отдельно, не при старте каждого worker. Backend и frontend работают без root. Наружу открыты только 80/443; backend/БД остаются во внутренней сети. Адрес backend нельзя публиковать напрямую: доверие proxy-заголовкам рассчитано на Caddy.
@@ -234,8 +234,8 @@ Healthchecks: PostgreSQL pg_isready; Django /api/health/ проверяет SQL-
 Пример для новой production-БД; имена заменяйте своими:
 
 ```sh
-docker compose -f docker-compose.v2.yml exec db pg_dump -U kdojo -d kdojo_v2 -Fc -f /tmp/kdojo-v2.dump
-docker compose -f docker-compose.v2.yml cp db:/tmp/kdojo-v2.dump ./backups/kdojo-v2.dump
+docker compose exec db pg_dump -U kdojo -d kdojo_v2 -Fc -f /tmp/kdojo-v2.dump
+docker compose cp db:/tmp/kdojo-v2.dump ./backups/kdojo-v2.dump
 ```
 
 Сначала создайте защищённую папку backups. Для каждого запуска используйте уникальное имя. Храните копии отдельно от сервера с ограниченным доступом. Проверяйте `pg_restore --list` и реальное восстановление в отдельную пустую БД; не используйте --clean против production.

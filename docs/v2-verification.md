@@ -2,11 +2,13 @@
 
 ## Docker — обновление 25.09.2026
 
-Docker Desktop Engine успешно запущен. `docker compose -f docker-compose.v2.yml build` собрал Django и Nuxt; `safe_migrate` и `seed_club` выполнены на новой PostgreSQL в отдельном volume. Все четыре сервиса запущены, healthcheck БД/backend/frontend проходят.
+Текущая конфигурация называется `compose.yml`; команды ниже приведены с этим именем по умолчанию. При переименовании сохранены имя проекта `kdojo-v2` и все volumes. Старый `docker-compose.yml` удалён из рабочей папки и доступен в истории Git.
+
+Docker Desktop Engine успешно запущен. `docker compose build` собрал Django и Nuxt; `safe_migrate` и `seed_club` выполнены на новой PostgreSQL в отдельном volume. Все четыре сервиса запущены, healthcheck БД/backend/frontend проходят.
 
 Через `https://localhost` проверены `/`, `/schedule/`, `/pricing/`, `/api/health/`, `/api/programs/`, `/admin/login/`, `/static/admin/css/base.css`, `/sitemap.xml`: HTTP 200, health API возвращает `{"status": "ok"}`. При HTTP-проверке использовался `curl -k`, поскольку локальному центру сертификатов Caddy ещё не предоставлено доверие в Windows. Публичный сертификат на реальном домене не проверялся.
 
-`docker compose -f docker-compose.v2.yml run --rm -e DJANGO_DEBUG=true backend python manage.py test club myapp`: 17 тестов пройдены, временная тестовая БД удалена. Первый запуск без тестовой настройки DEBUG завершился ошибками из-за HTTPS-редиректов; работающие сервисы остаются с `DJANGO_DEBUG=false`.
+`docker compose run --rm -e DJANGO_DEBUG=true backend python manage.py test club myapp`: 17 тестов пройдены, временная тестовая БД удалена. Первый запуск без тестовой настройки DEBUG завершился ошибками из-за HTTPS-редиректов; работающие сервисы остаются с `DJANGO_DEBUG=false`.
 
 Повторный запуск: `scripts/docker-up.ps1`. Документация ниже сохраняет результаты и ограничения проверки от 17.09.2026.
 
