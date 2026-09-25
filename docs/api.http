@@ -1,4 +1,4 @@
-@host=https://localhost
+@host=http://localhost:8080
 
 # Fetch CSRF cookie and token first; send both on POST.
 GET {{host}}/api/csrf/

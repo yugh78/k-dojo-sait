@@ -21,9 +21,7 @@ services:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
       DJANGO_DEBUG: "false"
-      DJANGO_HTTPS: "false"
-      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
-      CSRF_TRUSTED_ORIGINS: http://localhost:${HTTP_PORT:-8080},http://127.0.0.1:${HTTP_PORT:-8080}
+      DJANGO_HTTPS: "true"
     depends_on:
       db:
         condition: service_healthy
@@ -39,7 +37,7 @@ services:
     build: ./frontend
     environment:
       NUXT_API_BASE: http://backend:8000
-      NUXT_PUBLIC_SITE_URL: http://localhost:${HTTP_PORT:-8080}
+      NUXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN:?Set SITE_DOMAIN}
       HOST: 0.0.0.0
     depends_on:
       backend:
@@ -53,8 +51,8 @@ services:
   proxy:
     image: caddy:2-alpine
     environment:
-      SITE_DOMAIN: http://:80
-    ports: ["127.0.0.1:${HTTP_PORT:-8080}:80"]
+      SITE_DOMAIN: ${SITE_DOMAIN:?Set SITE_DOMAIN}
+    ports: ["80:80", "443:443"]
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - kdojo-v2-media:/srv/media:ro

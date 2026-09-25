@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 Set-Location (Join-Path $PSScriptRoot '..')
 
 if (-not (Test-Path -LiteralPath '.env')) {
-    throw 'Create .env from .env.example and set secrets and SITE_DOMAIN first.'
+    throw 'Create .env from .env.example and set DJANGO_SECRET_KEY and POSTGRES_PASSWORD first.'
 }
 
 function Invoke-Compose {

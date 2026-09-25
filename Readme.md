@@ -17,7 +17,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\docker-up.ps1
 
 В выводе `docker version` должны быть разделы `Client` и `Server` без ошибок. Дождитесь завершения скрипта: он соберёт образы, запустит PostgreSQL, применит миграции, добавит начальные данные клуба и запустит сайт. Первая сборка требует интернета и может занять несколько минут. Контейнеры работают в фоне — терминал можно закрыть.
 
-Откройте **[сайт](https://localhost)** или **[админку](https://localhost/admin/)**. Для localhost используется локальный сертификат Caddy, поэтому браузер может показать предупреждение о доверии.
+Откройте **[сайт](http://localhost:8080)** или **[админку](http://localhost:8080/admin/)**. Локальный Docker использует HTTP на порту 8080 без HTTPS-редиректов. Порты 80 и 443 на компьютере не используются.
 
 Docker автоматически использует **`compose.yml`** из папки проекта — параметр `-f` не нужен. Имя проекта `kdojo-v2` и имена volumes сохранены, поэтому используются прежние данные. Старая конфигурация PostgreSQL доступна в истории Git.
 
@@ -66,7 +66,7 @@ docker compose logs -f --tail 100
 docker compose exec backend python manage.py createsuperuser
 ```
 
-Введите имя, email и пароль по подсказкам. Символы пароля в терминале не отображаются — это нормально. Затем войдите на https://localhost/admin/.
+Введите имя, email и пароль по подсказкам. Символы пароля в терминале не отображаются — это нормально. Затем войдите на http://localhost:8080/admin/.
 
 Данные хранятся в Docker volumes и сохраняются при остановке и пересборке. Не используйте `down -v`: эта команда удаляет volumes проекта вместе с данными.
 
@@ -82,12 +82,13 @@ notepad .env
 Для локального запуска заполните следующие поля, остальные оставьте как в шаблоне:
 
 ```dotenv
+HTTP_PORT=8080
 DJANGO_SECRET_KEY=вставьте_первый_сгенерированный_секрет
 POSTGRES_PASSWORD=вставьте_второй_сгенерированный_секрет
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 SITE_DOMAIN=localhost
-NUXT_PUBLIC_SITE_URL=https://localhost
-CSRF_TRUSTED_ORIGINS=https://localhost
+NUXT_PUBLIC_SITE_URL=http://localhost:8080
+CSRF_TRUSTED_ORIGINS=http://localhost:8080
 ```
 
 Для каждого из двух секретов отдельно выполните в PowerShell и скопируйте полученную строку в соответствующее поле `.env`:
@@ -110,7 +111,7 @@ $rng.Dispose()
 | `docker desktop start` не поддерживается | Откройте Docker Desktop через меню «Пуск», дождитесь запуска Engine и повторите `docker version`. |
 | В `docker version` нет работающего `Server` | Дождитесь запуска Docker Desktop; если ошибка остаётся, проверьте сообщение в его окне. |
 | Ошибка про `.env`, `POSTGRES_PASSWORD` или `SITE_DOMAIN` | Заполните `.env` по разделу первого запуска. |
-| Порт 80 или 443 занят | Остановите другую программу, использующую этот порт, и повторите запуск. |
+| Порт 8080 занят | Укажите `HTTP_PORT=8081` в `.env`, повторите запуск и откройте `http://localhost:8081`. |
 | Контейнер `unhealthy` или сайт не открывается | Выполните команды `ps` и `logs -f --tail 100` выше: логи покажут причину. |
 
 ## Архитектура
@@ -178,6 +179,8 @@ pnpm --dir frontend dev
 
 | Переменная | Назначение |
 |---|---|
+| HTTP_PORT | Локальный порт Docker, по умолчанию 8080; URL и CSRF origins в Compose настраиваются автоматически |
+| DJANGO_HTTPS | Управляет HTTPS-редиректами и secure cookies; Compose задаёт false локально и true на сервере |
 | DJANGO_SECRET_KEY | Обязательный уникальный production-секрет |
 | DJANGO_DEBUG | false в production |
 | DJANGO_ALLOWED_HOSTS | Домены через запятую; localhost нужен healthcheck |
@@ -195,18 +198,20 @@ pnpm --dir frontend dev
 
 ## Production / Docker
 
+Для сервера используйте отдельный `compose.production.yml` с HTTPS и портами 80/443. Задайте реальный `SITE_DOMAIN`, `DJANGO_ALLOWED_HOSTS` и `CSRF_TRUSTED_ORIGINS=https://ваш-домен` в `.env`. Локальный и production-файлы запускаются отдельно, без объединения через два `-f`. Перед переключением остановите текущие контейнеры командой `docker compose stop`. Имя проекта и данные общие.
+
 Перед запуском прочтите [план миграции](docs/v2-migration-plan.md).
 Новая конфигурация использует отдельный Compose project `kdojo-v2` и новые volumes. Она не подключает `dsf-data`.
 
 ```sh
-docker compose config --quiet
-docker compose build
-docker compose up -d db
-docker compose run --rm backend python manage.py safe_migrate
-docker compose run --rm backend python manage.py seed_club
-docker compose run --rm backend python manage.py createsuperuser
-docker compose run --rm backend python manage.py check --deploy
-docker compose up -d
+docker compose -f compose.production.yml config --quiet
+docker compose -f compose.production.yml build
+docker compose -f compose.production.yml up -d db
+docker compose -f compose.production.yml run --rm backend python manage.py safe_migrate
+docker compose -f compose.production.yml run --rm backend python manage.py seed_club
+docker compose -f compose.production.yml run --rm backend python manage.py createsuperuser
+docker compose -f compose.production.yml run --rm backend python manage.py check --deploy
+docker compose -f compose.production.yml up -d
 ```
 
 Миграции выполняются отдельно, не при старте каждого worker. Backend и frontend работают без root. Наружу открыты только 80/443; backend/БД остаются во внутренней сети. Адрес backend нельзя публиковать напрямую: доверие proxy-заголовкам рассчитано на Caddy.
