@@ -25,7 +25,7 @@ usePageSeo(
 const [
   { data: coaches },
   { data: faq },
-  { data: schedule },
+  { data: schedule, error: scheduleError },
   { data: pricing },
 ] = await Promise.all([
   useClubApi<Coach[]>("coaches"),
@@ -89,7 +89,7 @@ const [
         </div>
       </section>
       <section class="section">
-        <SectionHeader title="Ваши тренеры" />
+        <SectionHeader title="Наши тренеры" />
         <div class="grid-3">
           <CoachCard
             v-for="coach in coaches?.filter((c) => c.programs.includes(slug))"
@@ -100,17 +100,15 @@ const [
       </section>
       <section class="section">
         <SectionHeader
-          title="Время для занятий"
+          title="Расписание занятий"
           :to="'/schedule?program=' + slug"
-          link-text="Расписание и фильтры"
+          link-text="Все группы и фильтры"
         />
-        <div class="schedule-grid">
-          <ScheduleEntry
-            v-for="entry in schedule?.filter((s) => s.program.slug === slug)"
-            :key="entry.id"
-            :entry="entry"
+        <ApiState :error="scheduleError">
+          <ProgramSchedule
+            :entries="schedule?.filter((s) => s.program.slug === slug) || []"
           />
-        </div>
+        </ApiState>
       </section>
       <section class="section">
         <SectionHeader

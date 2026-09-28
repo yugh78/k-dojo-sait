@@ -26,9 +26,15 @@ withDefaults(
     v-else
     class="media-placeholder"
     role="img"
-    :aria-label="alt + ': фотография готовится'"
+    :aria-label="alt + ' — K-Dojo'"
   >
-    <span aria-hidden="true">K<span class="seal">道</span></span
-    ><small>ФОТОГРАФИЯ СКОРО ПОЯВИТСЯ</small>
+    <img
+      src="/brand/k-dojo.svg"
+      alt=""
+      width="140"
+      height="140"
+      loading="lazy"
+    />
+    <small aria-hidden="true">K–DOJO / КОРОЛЁВ</small>
   </div>
 </template>

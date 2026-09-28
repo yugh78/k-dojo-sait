@@ -7,9 +7,9 @@ const active = ref("kyokushin");
   <section class="section dark-section">
     <div class="container">
       <SectionHeader
-        number="03"
+        number="04"
         eyebrow="ТРЕНИРОВОЧНЫЙ ПРОЦЕСС"
-        title="Меньше слов. Больше движения."
+        title="Характер в каждом движении."
       />
       <div class="tabs">
         <button

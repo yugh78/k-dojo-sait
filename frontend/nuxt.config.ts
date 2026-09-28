@@ -11,7 +11,8 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: "ru" },
-      meta: [{ name: "theme-color", content: "#f3f1ec" }],
+      meta: [{ name: "theme-color", content: "#151515" }],
+      link: [{ rel: "icon", type: "image/svg+xml", href: "/brand/k-dojo.svg" }],
     },
   },
   nitro: { compressPublicAssets: true },

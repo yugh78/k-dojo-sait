@@ -57,46 +57,51 @@ const upcoming = computed(
 <template>
   <div>
     <HomeHero />
-    <section id="programs" class="container section">
+    <section id="programs" class="container section programs-section">
       <SectionHeader
         number="01"
-        eyebrow="НАПРАВЛЕНИЯ"
-        title="Найдите своё движение."
-      /><ApiState :error="error"
-        ><div class="program-grid">
+        eyebrow="ВАШЕ НАПРАВЛЕНИЕ"
+        title="Один клуб. Свой путь."
+      />
+      <ApiState :error="error">
+        <div class="program-grid">
           <ProgramCard
             v-for="(program, index) in programs"
             :key="program.id"
             :program="program"
             :index="index"
-          /></div
-      ></ApiState>
+          />
+        </div>
+      </ApiState>
     </section>
-    <section class="container section">
-      <div class="about-grid">
+    <section class="club-intro">
+      <div class="container about-grid">
         <div>
-          <p class="eyebrow">02 / О КЛУБЕ</p>
-          <h2>Место, где начинается ваш спорт.</h2>
+          <p class="eyebrow">02 / ФИЛОСОФИЯ КЛУБА</p>
+          <h2>Сильнее.<br />Шаг за шагом.</h2>
         </div>
         <div>
           <p class="big-copy">
             {{
               settings?.about_text ||
-              "K-Dojo — спортивный клуб в Королёве. Здесь можно начать заниматься, развиваться и при желании постепенно перейти к серьёзному спорту."
+              "K-Dojo — спортивный клуб в Королёве. Здесь можно начать заниматься, развиваться и постепенно перейти к серьёзному спорту."
             }}
           </p>
+          <p class="muted">
+            Начните в своём темпе. Соревнования — для тех, кто готов и хочет
+            идти дальше. Уважение к партнёру и работа над собой — для каждого.
+          </p>
           <NuxtLink class="text-link" to="/about"
-            >Познакомиться с K-Dojo ↗</NuxtLink
+            >Познакомиться с клубом ↗</NuxtLink
           >
         </div>
       </div>
     </section>
-    <HomeTraining :programs="programs || []" />
     <section class="container section">
       <SectionHeader
-        number="04"
-        eyebrow="ТРЕНЕРЫ"
-        title="Люди, которые рядом."
+        number="03"
+        eyebrow="ТРЕНЕРСКИЙ СОСТАВ"
+        title="Есть на кого опереться."
         to="/coaches"
         link-text="Все тренеры"
       />
@@ -104,30 +109,63 @@ const upcoming = computed(
         <CoachCard v-for="coach in coaches" :key="coach.id" :coach="coach" />
       </div>
     </section>
-    <section class="container section team-section">
-      <p class="eyebrow">05 / КИОКУСИНКАЙ</p>
-      <h2>K-DOJO TEAM</h2>
-      <div class="grid-2">
-        <p class="lead">От первой тренировки — к новым спортивным задачам.</p>
-        <div>
-          <p>
-            Спарринги, сборы, физическая подготовка и соревнования. Для тех, кто
-            хочет идти дальше. Участие в турнирах — выбор спортсмена и тренера.
-          </p>
-          <NuxtLink class="text-link" to="/results"
-            >Результаты команды ↗</NuxtLink
-          >
-        </div>
-      </div>
-    </section>
+    <HomeTraining :programs="programs || []" />
     <section class="container section">
       <SectionHeader
-        number="06"
-        eyebrow="РЕЗУЛЬТАТЫ"
-        title="За каждым стартом — работа."
-        to="/results"
-        link-text="Все результаты"
+        number="05"
+        eyebrow="РАСПИСАНИЕ"
+        title="Время для себя."
+        to="/schedule"
+        link-text="Все дни и группы"
       />
+      <div class="schedule-grid">
+        <ScheduleDay
+          v-for="(day, i) in ['Понедельник', 'Вторник', 'Среда']"
+          :key="day"
+          :day="day"
+          :entries="(schedule || []).filter((e) => e.weekday === i).slice(0, 2)"
+        />
+      </div>
+      <p class="section-note">
+        Несколько групп из расписания. Все занятия, возраст и тренеры —
+        <NuxtLink to="/schedule">в полном расписании ↗</NuxtLink>
+      </p>
+    </section>
+    <section class="pricing-section">
+      <div class="container section">
+        <SectionHeader
+          number="06"
+          eyebrow="АБОНЕМЕНТЫ"
+          title="Выберите свой ритм."
+          to="/pricing"
+          link-text="Тарифы и льготы"
+        />
+        <div class="grid-3">
+          <PricingPlan
+            v-for="plan in pricing?.filter((p) => p.category === 'standard')"
+            :key="plan.id"
+            :plan="plan"
+          />
+        </div>
+        <p class="section-note">
+          Оплата наличными. Семейные и специальные условия — на странице
+          стоимости.
+        </p>
+      </div>
+    </section>
+    <section
+      v-if="results?.length || upcoming.length"
+      class="container section"
+    >
+      <SectionHeader
+        eyebrow="K–DOJO TEAM"
+        title="За пределами тренировки."
+        to="/events"
+        link-text="Жизнь клуба"
+      />
+      <div v-if="upcoming.length" class="grid-3">
+        <EventCard v-for="event in upcoming" :key="event.id" :event="event" />
+      </div>
       <div v-if="results?.length" class="grid-3">
         <article
           v-for="result in results.slice(0, 3)"
@@ -142,92 +180,38 @@ const upcoming = computed(
           </p>
         </article>
       </div>
-      <EmptyState
-        v-else
-        title="Истории наших стартов"
-        text="Готовим подтверждённые результаты соревнований и фотографии команды."
-      />
-    </section>
-    <section class="container section">
-      <SectionHeader
-        number="07"
-        eyebrow="ЖИЗНЬ КЛУБА"
-        title="Больше, чем тренировки."
-        to="/gallery"
-        link-text="Галерея клуба"
-      />
-      <p class="lead">
-        Сборы, экзамены, турниры и клубные встречи — часть спортивной жизни
-        K-Dojo.
-      </p>
-      <SectionHeader
-        title="Ближайшие события"
-        to="/events"
-        link-text="Календарь и архив"
-      />
-      <div v-if="upcoming.length" class="grid-3">
-        <EventCard v-for="event in upcoming" :key="event.id" :event="event" />
-      </div>
-      <EmptyState
-        v-else
-        title="Следующие встречи готовятся"
-        text="После подтверждения дат события появятся здесь. Новости клуба также доступны в Telegram."
-      />
-    </section>
-    <section class="container section">
-      <SectionHeader
-        number="08"
-        eyebrow="РАСПИСАНИЕ"
-        title="Спорт в вашем ритме."
-        to="/schedule"
-        link-text="Полное расписание"
-      />
-      <div class="schedule-grid">
-        <ScheduleDay
-          v-for="(day, i) in ['Понедельник', 'Вторник', 'Среда']"
-          :key="day"
-          :day="day"
-          :entries="(schedule || []).filter((e) => e.weekday === i)"
-        />
-      </div>
-    </section>
-    <section class="container section">
-      <SectionHeader
-        number="09"
-        eyebrow="СТОИМОСТЬ"
-        title="Понятные условия."
-        to="/pricing"
-        link-text="Все тарифы и льготы"
-      />
-      <div class="grid-3">
-        <PricingPlan
-          v-for="plan in pricing?.filter((p) => p.category === 'standard')"
-          :key="plan.id"
-          :plan="plan"
-        />
-      </div>
-      <p class="muted">
-        Оплата наличными. Семейные и специальные условия — на странице
-        стоимости.
-      </p>
     </section>
     <TrialBand />
-    <section class="container section">
-      <SectionHeader
-        number="10"
-        eyebrow="ПЕРЕД ПЕРВОЙ ТРЕНИРОВКОЙ"
-        title="Хорошие вопросы."
-      /><FAQAccordion :items="faq?.filter((f) => !f.program) || []" />
-    </section>
-    <section class="container section grid-2">
+    <section class="container section home-faq">
       <div>
-        <p class="eyebrow">11 / ДО ВСТРЕЧИ В КЛУБЕ</p>
-        <h2>Начните<br />с знакомства.</h2>
-        <p class="lead">Королёв, Московская область</p>
-        <p><a href="tel:+79250173216">+7 (925) 017-32-16</a></p>
-        <NuxtLink class="text-link" to="/contacts">Залы и контакты ↗</NuxtLink>
+        <p class="eyebrow">ПЕРЕД ПЕРВЫМ ЗАНЯТИЕМ</p>
+        <h2>Начать проще,<br />чем кажется.</h2>
+        <p class="muted">
+          Ответы на вопросы, которые часто задают перед знакомством с клубом.
+        </p>
       </div>
-      <ApplicationForm />
+      <FAQAccordion :items="faq?.filter((f) => !f.program) || []" />
+    </section>
+    <section class="contact-section">
+      <div class="container section grid-2">
+        <div class="contact-copy">
+          <p class="eyebrow">ВАШ ПЕРВЫЙ ШАГ</p>
+          <h2>Увидимся<br />на тренировке.</h2>
+          <p class="lead">
+            Подберём направление и группу.<br />Первое занятие — бесплатно.
+          </p>
+          <a
+            class="contact-phone"
+            :href="'tel:' + (settings?.phone || '+79250173216')"
+            >{{ settings?.phone || "+7 (925) 017-32-16" }}</a
+          >
+          <p class="muted">Королёв, Московская область</p>
+          <NuxtLink class="text-link" to="/contacts"
+            >Залы и контакты ↗</NuxtLink
+          >
+        </div>
+        <ApplicationForm />
+      </div>
     </section>
   </div>
 </template>
