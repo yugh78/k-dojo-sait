@@ -1,7 +1,0 @@
-node_modules
-.nuxt
-.output
-test-results
-playwright-report
-.env
-reports

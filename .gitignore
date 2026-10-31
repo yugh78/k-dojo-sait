@@ -21,3 +21,4 @@ staticfiles/
 backups/
 
 frontend/reports/
+.pnpm-store/

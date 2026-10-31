@@ -7,7 +7,7 @@ import type {
   PricingPlan,
 } from "~/types/api";
 const props = defineProps<{ slug: string }>();
-const { data: program, error } = await useClubApi<Program>(
+const { data: program, error } = await useClubContent<Program>(
   `programs/${props.slug}`,
 );
 if (!program.value)
@@ -28,10 +28,10 @@ const [
   { data: schedule, error: scheduleError },
   { data: pricing },
 ] = await Promise.all([
-  useClubApi<Coach[]>("coaches"),
-  useClubApi<FAQ[]>("faq"),
-  useClubApi<ScheduleEntry[]>("schedule"),
-  useClubApi<PricingPlan[]>("pricing"),
+  useClubContent<Coach[]>("coaches"),
+  useClubContent<FAQ[]>("faq"),
+  useClubContent<ScheduleEntry[]>("schedule"),
+  useClubContent<PricingPlan[]>("pricing"),
 ]);
 </script>
 <template>

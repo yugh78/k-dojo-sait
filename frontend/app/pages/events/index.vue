@@ -2,9 +2,10 @@
 import type { ClubEvent } from "~/types/api";
 usePageSeo("События и сборы клуба");
 const period = ref("upcoming");
-const { data: events, error } = await useFetch<ClubEvent[]>("/api/events/", {
-  query: { period },
-});
+const { data: events, error } = await useClubContent<ClubEvent[]>(
+  "events",
+  computed(() => ({ period: period.value })),
+);
 </script>
 <template>
   <div class="container">

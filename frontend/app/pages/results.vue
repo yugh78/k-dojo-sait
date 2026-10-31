@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Result } from "~/types/api";
 usePageSeo("Результаты соревнований");
-const { data: results, error } = await useClubApi<Result[]>("results");
+const { data: results, error } = await useClubContent<Result[]>("results");
 const year = ref("");
 const competition = ref("");
 const years = computed(() =>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ClubEvent } from "~/types/api";
 const route = useRoute();
-const { data: event, error } = await useClubApi<ClubEvent>(
+const { data: event, error } = await useClubContent<ClubEvent>(
   `events/${String(route.params.slug)}`,
 );
 if (!event.value)

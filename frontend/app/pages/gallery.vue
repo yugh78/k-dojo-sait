@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Album } from "~/types/api";
 usePageSeo("Фотографии клуба");
-const { data: albums, error } = await useClubApi<Album[]>("gallery");
+const { data: albums, error } = await useClubContent<Album[]>("gallery");
 const category = ref("");
 const categories = [
   ["", "Все"],

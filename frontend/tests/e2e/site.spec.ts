@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-test("all main pages, real API content and no browser exceptions", async ({
+test("all main pages, local content and no browser exceptions", async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -56,25 +56,18 @@ test("mobile menu is keyboard accessible", async ({ page }) => {
     page.getByRole("navigation", { name: "Мобильная навигация" }),
   ).toHaveCount(0);
 });
-test("application validates then saves through Django with CSRF", async ({
+test("trial booking provides club contacts without collecting applications", async ({
   page,
 }) => {
-  await page.goto("/contacts?program=mowgli#application");
-  const form = page.locator("#application");
-  await form.getByRole("button", { name: "Записаться бесплатно" }).click();
-  await expect(form.locator("input[name=name]")).toBeFocused();
-  await form.getByLabel("Ваше имя").fill("E2E demo application");
-  await form.getByLabel("Телефон", { exact: true }).fill("invalid");
-  await form.getByLabel("Возраст занимающегося").fill("8");
-  await form.locator("input[name=consent]").check();
-  await expect(form).toContainText("Мы всё равно поможем");
-  await form.getByRole("button", { name: "Записаться бесплатно" }).click();
-  await expect(form.getByRole("alert")).toContainText("Укажите телефон");
-  await form.getByLabel("Телефон", { exact: true }).fill("+7 (999) 000-00-01");
-  await form.getByRole("button", { name: "Записаться бесплатно" }).click();
-  await expect(form.getByRole("status")).toContainText("Заявка сохранена");
+  await page.goto("/contacts#application");
+  const section = page.locator("#application");
+  await expect(
+    section.getByRole("link", { name: "Позвонить в клуб" }),
+  ).toHaveAttribute("href", "tel:+79250173216");
+  await expect(section.locator("form")).toHaveCount(0);
 });
-test("prices are loaded from API and restrictions are visible", async ({
+
+test("prices are loaded from local content and restrictions are visible", async ({
   page,
 }) => {
   await page.goto("/pricing");

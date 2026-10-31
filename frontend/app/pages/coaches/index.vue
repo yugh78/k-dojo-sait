@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Coach } from "~/types/api";
 usePageSeo("Тренеры клуба");
-const { data: coaches, error } = await useClubApi<Coach[]>("coaches");
+const { data: coaches, error } = await useClubContent<Coach[]>("coaches");
 </script>
 <template>
   <div>

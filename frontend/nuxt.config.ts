@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   css: ["~/assets/main.css"],
   typescript: { strict: true },
   runtimeConfig: {
-    apiBase: "http://127.0.0.1:8000",
     public: { siteUrl: "http://localhost:3000" },
   },
   app: {

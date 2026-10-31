@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { PricingPlan, Discount } from "~/types/api";
 usePageSeo("Стоимость тренировок");
-const { data: plans, error } = await useClubApi<PricingPlan[]>("pricing");
-const { data: discounts } = await useClubApi<Discount[]>("discounts");
+const { data: plans, error } = await useClubContent<PricingPlan[]>("pricing");
+const { data: discounts } = await useClubContent<Discount[]>("discounts");
 </script>
 <template>
   <div>

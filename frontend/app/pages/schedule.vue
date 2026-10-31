@@ -8,9 +8,9 @@ const age = ref("");
 const coach = ref("");
 const location = ref("");
 const weekday = ref("");
-const { data: programs } = await useClubApi<Program[]>("programs");
-const { data: coaches } = await useClubApi<Coach[]>("coaches");
-const { data: locations } = await useClubApi<Location[]>("locations");
+const { data: programs } = await useClubContent<Program[]>("programs");
+const { data: coaches } = await useClubContent<Coach[]>("coaches");
+const { data: locations } = await useClubContent<Location[]>("locations");
 const query = computed(() => ({
   program: program.value,
   age: age.value,
@@ -22,7 +22,7 @@ const {
   data: entries,
   error,
   status,
-} = await useFetch<ScheduleEntry[]>("/api/schedule/", { query });
+} = await useClubContent<ScheduleEntry[]>("schedule", query);
 watch(program, (value) =>
   router.replace({ query: { ...route.query, program: value || undefined } }),
 );

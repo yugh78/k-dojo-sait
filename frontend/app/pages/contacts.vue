@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Location, SiteSettings } from "~/types/api";
 usePageSeo("Контакты и запись на тренировку");
-const { data: locations, error } = await useClubApi<Location[]>("locations");
+const { data: locations, error } =
+  await useClubContent<Location[]>("locations");
 const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
 </script>
 <template>

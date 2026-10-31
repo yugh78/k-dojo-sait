@@ -19,13 +19,13 @@ const [
   { data: pricing },
   { data: faq },
 ] = await Promise.all([
-  useClubApi<Program[]>("programs"),
-  useClubApi<Coach[]>("coaches"),
-  useClubApi<ClubEvent[]>("events"),
-  useClubApi<Result[]>("results"),
-  useClubApi<ScheduleEntry[]>("schedule"),
-  useClubApi<PricingPlan[]>("pricing"),
-  useClubApi<FAQ[]>("faq"),
+  useClubContent<Program[]>("programs"),
+  useClubContent<Coach[]>("coaches"),
+  useClubContent<ClubEvent[]>("events"),
+  useClubContent<Result[]>("results"),
+  useClubContent<ScheduleEntry[]>("schedule"),
+  useClubContent<PricingPlan[]>("pricing"),
+  useClubContent<FAQ[]>("faq"),
 ]);
 const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
 const config = useRuntimeConfig();

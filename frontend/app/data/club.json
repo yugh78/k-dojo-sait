@@ -1,0 +1,1101 @@
+{
+  "programs": [
+    {
+      "id": 1,
+      "name": "Каратэ Киокусинкай",
+      "slug": "kyokushin",
+      "short_description": "Основное историческое и соревновательное направление K-Dojo. Можно начать без опыта. Соревнования доступны желающим и подготовленным спортсменам.",
+      "description": "Основное историческое и соревновательное направление K-Dojo. Можно начать без опыта. Соревнования доступны желающим и подготовленным спортсменам.",
+      "audience": "Дети, подростки и взрослые",
+      "minimum_age": null,
+      "maximum_age": null,
+      "training_steps": "Разминка и движение\nТехника\nЛапы и снаряды\nРабота в парах\nСпарринги\nОФП / СФП",
+      "first_training": "На первую тренировку можно прийти без опыта. Не нужно заранее покупать полную экипировку. Уточните одежду у тренера.",
+      "equipment": "",
+      "image": null,
+      "accent": "red"
+    },
+    {
+      "id": 2,
+      "name": "BJJ и грэпплинг",
+      "slug": "bjj",
+      "short_description": "Бразильское джиу-джитсу и грэпплинг. Работа с партнёром, освоение позиций и техники борьбы. Занятия направлены на физическое развитие и координацию.",
+      "description": "Бразильское джиу-джитсу и грэпплинг. Работа с партнёром, освоение позиций и техники борьбы. Занятия направлены на физическое развитие и координацию.",
+      "audience": "Дети от 7 лет",
+      "minimum_age": 7,
+      "maximum_age": null,
+      "training_steps": "Разминка\nДвижения и базовая моторика\nИзучение позиции / техники\nРабота с партнёром\nСитуационная борьба\nОбщая физическая подготовка",
+      "first_training": "На первую тренировку можно прийти без опыта. Не нужно заранее покупать полную экипировку. Уточните одежду у тренера.",
+      "equipment": "",
+      "image": null,
+      "accent": "gold"
+    },
+    {
+      "id": 3,
+      "name": "Маугли",
+      "slug": "mowgli",
+      "short_description": "Самостоятельная спортивно-оздоровительная система для детей 3–7 лет. Это не карате: двигательные задания помогают развивать координацию, ловкость, гибкость и равновесие.",
+      "description": "Самостоятельная спортивно-оздоровительная система для детей 3–7 лет. Это не карате: двигательные задания помогают развивать координацию, ловкость, гибкость и равновесие.",
+      "audience": "Дети 3–7 лет",
+      "minimum_age": 3,
+      "maximum_age": 7,
+      "training_steps": "Двигательные задания\nКоординационные упражнения\nОбщая физическая подготовка\nИгровые элементы\nРабота с собственным телом",
+      "first_training": "На первую тренировку можно прийти без опыта. Не нужно заранее покупать полную экипировку. Уточните одежду у тренера.",
+      "equipment": "",
+      "image": null,
+      "accent": "green"
+    }
+  ],
+  "coaches": [
+    {
+      "id": 1,
+      "full_name": "Сергей Сергеевич Корчашкин",
+      "slug": "korchashkin",
+      "photo": null,
+      "short_description": "Тренер по Киокусинкай, BJJ и грэпплингу.",
+      "biography": "",
+      "qualifications": "",
+      "achievements": "",
+      "experience": "",
+      "programs": ["kyokushin", "bjj"],
+      "certificates": []
+    },
+    {
+      "id": 2,
+      "full_name": "Игорь Павлович Крылов",
+      "slug": "krylov",
+      "photo": null,
+      "short_description": "Тренер по Киокусинкай.",
+      "biography": "",
+      "qualifications": "",
+      "achievements": "",
+      "experience": "",
+      "programs": ["kyokushin"],
+      "certificates": []
+    },
+    {
+      "id": 3,
+      "full_name": "Ряжский Илья Юрьевич",
+      "slug": "ryazhsky",
+      "photo": null,
+      "short_description": "Прошёл обучение по системе «Маугли», имеет соответствующий сертификат.",
+      "biography": "",
+      "qualifications": "",
+      "achievements": "",
+      "experience": "",
+      "programs": ["mowgli"],
+      "certificates": []
+    }
+  ],
+  "locations": [
+    {
+      "id": 1,
+      "name": "Зал BJJ",
+      "slug": "koroleva-1a",
+      "address": "г. Королёв, проспект Королёва, 1А",
+      "latitude": null,
+      "longitude": null,
+      "entrance": "",
+      "phone": "+7 (925) 017-32-16",
+      "route_url": "https://yandex.ru/maps/?text=Королёв%20проспект%20Королёва%201А",
+      "programs": [2],
+      "photo": null
+    }
+  ],
+  "schedule": [
+    {
+      "id": 7,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 3,
+        "name": "Дети до 9 / Крылов",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 8,
+        "audience": "Дети до 9 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 0,
+      "start_time": "16:30:00",
+      "end_time": "17:45:00",
+      "minimum_age": null,
+      "maximum_age": 8,
+      "audience": "Дети до 9 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 1,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 1,
+        "name": "Дети 9+ / Корчашкин",
+        "program": 1,
+        "minimum_age": 9,
+        "maximum_age": 17,
+        "audience": "Дети 9+"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 0,
+      "start_time": "17:00:00",
+      "end_time": "18:30:00",
+      "minimum_age": 9,
+      "maximum_age": 17,
+      "audience": "Дети 9+",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 4,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 2,
+        "name": "Дети до 9 / Корчашкин",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 8,
+        "audience": "Дети до 9 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 0,
+      "start_time": "18:45:00",
+      "end_time": "20:00:00",
+      "minimum_age": null,
+      "maximum_age": 8,
+      "audience": "Дети до 9 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 10,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 4,
+        "name": "Дети 9+ / Крылов",
+        "program": 1,
+        "minimum_age": 9,
+        "maximum_age": 17,
+        "audience": "Дети 9+"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 0,
+      "start_time": "18:45:00",
+      "end_time": "20:15:00",
+      "minimum_age": 9,
+      "maximum_age": 17,
+      "audience": "Дети 9+",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 13,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 5,
+        "name": "Взрослые",
+        "program": 1,
+        "minimum_age": 18,
+        "maximum_age": null,
+        "audience": "Взрослые"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 0,
+      "start_time": "20:30:00",
+      "end_time": "22:00:00",
+      "minimum_age": 18,
+      "maximum_age": null,
+      "audience": "Взрослые",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 16,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 6,
+        "name": "Детская совместная",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 17,
+        "audience": "Дети"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        },
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 1,
+      "start_time": "16:30:00",
+      "end_time": "18:00:00",
+      "minimum_age": null,
+      "maximum_age": 17,
+      "audience": "Дети",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 19,
+      "program": {
+        "id": 2,
+        "name": "BJJ и грэпплинг",
+        "slug": "bjj",
+        "accent": "gold"
+      },
+      "training_group": {
+        "id": 8,
+        "name": "BJJ / дети от 7 лет",
+        "program": 2,
+        "minimum_age": 7,
+        "maximum_age": 17,
+        "audience": "Дети от 7 лет"
+      },
+      "location": {
+        "id": 1,
+        "name": "Зал BJJ",
+        "slug": "koroleva-1a",
+        "address": "г. Королёв, проспект Королёва, 1А",
+        "latitude": null,
+        "longitude": null,
+        "entrance": "",
+        "phone": "+7 (925) 017-32-16",
+        "route_url": "https://yandex.ru/maps/?text=Королёв%20проспект%20Королёва%201А",
+        "programs": [2],
+        "photo": null
+      },
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 1,
+      "start_time": "18:00:00",
+      "end_time": "19:30:00",
+      "minimum_age": 7,
+      "maximum_age": 17,
+      "audience": "Дети от 7 лет",
+      "notes": ""
+    },
+    {
+      "id": 22,
+      "program": {
+        "id": 3,
+        "name": "Маугли",
+        "slug": "mowgli",
+        "accent": "green"
+      },
+      "training_group": {
+        "id": 9,
+        "name": "Маугли / 3–7 лет",
+        "program": 3,
+        "minimum_age": 3,
+        "maximum_age": 7,
+        "audience": "Дети 3–7 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 3,
+          "full_name": "Ряжский Илья Юрьевич",
+          "slug": "ryazhsky"
+        }
+      ],
+      "weekday": 1,
+      "start_time": "18:00:00",
+      "end_time": "18:45:00",
+      "minimum_age": 3,
+      "maximum_age": 7,
+      "audience": "Дети 3–7 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 8,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 3,
+        "name": "Дети до 9 / Крылов",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 8,
+        "audience": "Дети до 9 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 2,
+      "start_time": "16:30:00",
+      "end_time": "17:45:00",
+      "minimum_age": null,
+      "maximum_age": 8,
+      "audience": "Дети до 9 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 2,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 1,
+        "name": "Дети 9+ / Корчашкин",
+        "program": 1,
+        "minimum_age": 9,
+        "maximum_age": 17,
+        "audience": "Дети 9+"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 2,
+      "start_time": "17:00:00",
+      "end_time": "18:30:00",
+      "minimum_age": 9,
+      "maximum_age": 17,
+      "audience": "Дети 9+",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 5,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 2,
+        "name": "Дети до 9 / Корчашкин",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 8,
+        "audience": "Дети до 9 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 2,
+      "start_time": "18:45:00",
+      "end_time": "20:00:00",
+      "minimum_age": null,
+      "maximum_age": 8,
+      "audience": "Дети до 9 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 11,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 4,
+        "name": "Дети 9+ / Крылов",
+        "program": 1,
+        "minimum_age": 9,
+        "maximum_age": 17,
+        "audience": "Дети 9+"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 2,
+      "start_time": "18:45:00",
+      "end_time": "20:15:00",
+      "minimum_age": 9,
+      "maximum_age": 17,
+      "audience": "Дети 9+",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 14,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 5,
+        "name": "Взрослые",
+        "program": 1,
+        "minimum_age": 18,
+        "maximum_age": null,
+        "audience": "Взрослые"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 2,
+      "start_time": "20:30:00",
+      "end_time": "22:00:00",
+      "minimum_age": 18,
+      "maximum_age": null,
+      "audience": "Взрослые",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 17,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 6,
+        "name": "Детская совместная",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 17,
+        "audience": "Дети"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        },
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 3,
+      "start_time": "16:30:00",
+      "end_time": "18:00:00",
+      "minimum_age": null,
+      "maximum_age": 17,
+      "audience": "Дети",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 20,
+      "program": {
+        "id": 2,
+        "name": "BJJ и грэпплинг",
+        "slug": "bjj",
+        "accent": "gold"
+      },
+      "training_group": {
+        "id": 8,
+        "name": "BJJ / дети от 7 лет",
+        "program": 2,
+        "minimum_age": 7,
+        "maximum_age": 17,
+        "audience": "Дети от 7 лет"
+      },
+      "location": {
+        "id": 1,
+        "name": "Зал BJJ",
+        "slug": "koroleva-1a",
+        "address": "г. Королёв, проспект Королёва, 1А",
+        "latitude": null,
+        "longitude": null,
+        "entrance": "",
+        "phone": "+7 (925) 017-32-16",
+        "route_url": "https://yandex.ru/maps/?text=Королёв%20проспект%20Королёва%201А",
+        "programs": [2],
+        "photo": null
+      },
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 3,
+      "start_time": "18:00:00",
+      "end_time": "19:30:00",
+      "minimum_age": 7,
+      "maximum_age": 17,
+      "audience": "Дети от 7 лет",
+      "notes": ""
+    },
+    {
+      "id": 23,
+      "program": {
+        "id": 3,
+        "name": "Маугли",
+        "slug": "mowgli",
+        "accent": "green"
+      },
+      "training_group": {
+        "id": 9,
+        "name": "Маугли / 3–7 лет",
+        "program": 3,
+        "minimum_age": 3,
+        "maximum_age": 7,
+        "audience": "Дети 3–7 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 3,
+          "full_name": "Ряжский Илья Юрьевич",
+          "slug": "ryazhsky"
+        }
+      ],
+      "weekday": 3,
+      "start_time": "18:00:00",
+      "end_time": "18:45:00",
+      "minimum_age": 3,
+      "maximum_age": 7,
+      "audience": "Дети 3–7 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 9,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 3,
+        "name": "Дети до 9 / Крылов",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 8,
+        "audience": "Дети до 9 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 4,
+      "start_time": "16:30:00",
+      "end_time": "17:45:00",
+      "minimum_age": null,
+      "maximum_age": 8,
+      "audience": "Дети до 9 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 3,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 1,
+        "name": "Дети 9+ / Корчашкин",
+        "program": 1,
+        "minimum_age": 9,
+        "maximum_age": 17,
+        "audience": "Дети 9+"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 4,
+      "start_time": "17:00:00",
+      "end_time": "18:30:00",
+      "minimum_age": 9,
+      "maximum_age": 17,
+      "audience": "Дети 9+",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 6,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 2,
+        "name": "Дети до 9 / Корчашкин",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": 8,
+        "audience": "Дети до 9 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 4,
+      "start_time": "18:45:00",
+      "end_time": "20:00:00",
+      "minimum_age": null,
+      "maximum_age": 8,
+      "audience": "Дети до 9 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 12,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 4,
+        "name": "Дети 9+ / Крылов",
+        "program": 1,
+        "minimum_age": 9,
+        "maximum_age": 17,
+        "audience": "Дети 9+"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 4,
+      "start_time": "18:45:00",
+      "end_time": "20:15:00",
+      "minimum_age": 9,
+      "maximum_age": 17,
+      "audience": "Дети 9+",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 15,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 5,
+        "name": "Взрослые",
+        "program": 1,
+        "minimum_age": 18,
+        "maximum_age": null,
+        "audience": "Взрослые"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 2,
+          "full_name": "Игорь Павлович Крылов",
+          "slug": "krylov"
+        }
+      ],
+      "weekday": 4,
+      "start_time": "20:30:00",
+      "end_time": "22:00:00",
+      "minimum_age": 18,
+      "maximum_age": null,
+      "audience": "Взрослые",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 21,
+      "program": {
+        "id": 2,
+        "name": "BJJ и грэпплинг",
+        "slug": "bjj",
+        "accent": "gold"
+      },
+      "training_group": {
+        "id": 8,
+        "name": "BJJ / дети от 7 лет",
+        "program": 2,
+        "minimum_age": 7,
+        "maximum_age": 17,
+        "audience": "Дети от 7 лет"
+      },
+      "location": {
+        "id": 1,
+        "name": "Зал BJJ",
+        "slug": "koroleva-1a",
+        "address": "г. Королёв, проспект Королёва, 1А",
+        "latitude": null,
+        "longitude": null,
+        "entrance": "",
+        "phone": "+7 (925) 017-32-16",
+        "route_url": "https://yandex.ru/maps/?text=Королёв%20проспект%20Королёва%201А",
+        "programs": [2],
+        "photo": null
+      },
+      "coaches": [
+        {
+          "id": 1,
+          "full_name": "Сергей Сергеевич Корчашкин",
+          "slug": "korchashkin"
+        }
+      ],
+      "weekday": 5,
+      "start_time": "11:00:00",
+      "end_time": "12:30:00",
+      "minimum_age": 7,
+      "maximum_age": 17,
+      "audience": "Дети от 7 лет",
+      "notes": ""
+    },
+    {
+      "id": 18,
+      "program": {
+        "id": 1,
+        "name": "Каратэ Киокусинкай",
+        "slug": "kyokushin",
+        "accent": "red"
+      },
+      "training_group": {
+        "id": 7,
+        "name": "Совместная тренировка",
+        "program": 1,
+        "minimum_age": null,
+        "maximum_age": null,
+        "audience": "Совместная тренировка"
+      },
+      "location": null,
+      "coaches": [],
+      "weekday": 5,
+      "start_time": "13:00:00",
+      "end_time": "14:30:00",
+      "minimum_age": null,
+      "maximum_age": null,
+      "audience": "Совместная тренировка",
+      "notes": "Адрес уточняйте у администрации клуба."
+    },
+    {
+      "id": 24,
+      "program": {
+        "id": 3,
+        "name": "Маугли",
+        "slug": "mowgli",
+        "accent": "green"
+      },
+      "training_group": {
+        "id": 9,
+        "name": "Маугли / 3–7 лет",
+        "program": 3,
+        "minimum_age": 3,
+        "maximum_age": 7,
+        "audience": "Дети 3–7 лет"
+      },
+      "location": null,
+      "coaches": [
+        {
+          "id": 3,
+          "full_name": "Ряжский Илья Юрьевич",
+          "slug": "ryazhsky"
+        }
+      ],
+      "weekday": 5,
+      "start_time": "18:00:00",
+      "end_time": "18:45:00",
+      "minimum_age": 3,
+      "maximum_age": 7,
+      "audience": "Дети 3–7 лет",
+      "notes": "Адрес уточняйте у администрации клуба."
+    }
+  ],
+  "pricing": [
+    {
+      "id": 1,
+      "name": "2 тренировки в неделю",
+      "slug": "twice",
+      "price": "4500.00",
+      "billing_period": "месяц",
+      "sessions_per_week": 2,
+      "unlimited": false,
+      "description": "",
+      "eligibility": "",
+      "programs": [1, 2, 3],
+      "training_groups": [],
+      "category": "standard"
+    },
+    {
+      "id": 2,
+      "name": "3 тренировки в неделю",
+      "slug": "three",
+      "price": "6000.00",
+      "billing_period": "месяц",
+      "sessions_per_week": 3,
+      "unlimited": false,
+      "description": "",
+      "eligibility": "",
+      "programs": [1, 2, 3],
+      "training_groups": [],
+      "category": "standard"
+    },
+    {
+      "id": 3,
+      "name": "Безлимит",
+      "slug": "unlimited",
+      "price": "7000.00",
+      "billing_period": "месяц",
+      "sessions_per_week": null,
+      "unlimited": true,
+      "description": "",
+      "eligibility": "4 и более тренировок в неделю.",
+      "programs": [1, 2, 3],
+      "training_groups": [],
+      "category": "standard"
+    },
+    {
+      "id": 4,
+      "name": "Студенческий тариф",
+      "slug": "student",
+      "price": "4000.00",
+      "billing_period": "месяц",
+      "sessions_per_week": null,
+      "unlimited": false,
+      "description": "",
+      "eligibility": "Для взрослых студентов вузов и колледжей при предъявлении действующего студенческого билета.",
+      "programs": [1, 2, 3],
+      "training_groups": [],
+      "category": "special"
+    },
+    {
+      "id": 5,
+      "name": "Спортивная команда Киокусинкай",
+      "slug": "team",
+      "price": "5500.00",
+      "billing_period": "месяц",
+      "sessions_per_week": null,
+      "unlimited": true,
+      "description": "",
+      "eligibility": "Только активным спортсменам Киокусинкай: участие во всех сезонных, зимних и летних сборах клуба, минимум 3 соревнования в год, активное участие в спортивной жизни. Право подтверждает тренер или администрация.",
+      "programs": [1],
+      "training_groups": [],
+      "category": "special"
+    }
+  ],
+  "discounts": [
+    {
+      "id": 1,
+      "name": "Додзё — наш дом: 3-й член семьи",
+      "slug": "third",
+      "discount_type": "percent",
+      "discount_value": "50.00",
+      "description": "Скидка 50% для третьего члена семьи.",
+      "eligibility_text": "Условия одновременного применения нескольких льгот уточняйте у администрации клуба.",
+      "applicable_programs": []
+    },
+    {
+      "id": 2,
+      "name": "4-й член семьи и последующие",
+      "slug": "fourth",
+      "discount_type": "free",
+      "discount_value": "100.00",
+      "description": "Тренируются бесплатно.",
+      "eligibility_text": "Условия одновременного применения нескольких льгот уточняйте у администрации клуба.",
+      "applicable_programs": []
+    },
+    {
+      "id": 3,
+      "name": "Многодетные семьи",
+      "slug": "large-family",
+      "discount_type": "percent",
+      "discount_value": "25.00",
+      "description": "Скидка 25% на абонементы.",
+      "eligibility_text": "Условия одновременного применения нескольких льгот уточняйте у администрации клуба.",
+      "applicable_programs": []
+    }
+  ],
+  "faq": [
+    {
+      "id": 1,
+      "question": "Можно ли прийти без опыта?",
+      "answer": "Да. На первую тренировку не требуется знать технику или заранее покупать полную экипировку.",
+      "program": null
+    },
+    {
+      "id": 2,
+      "question": "Первая тренировка бесплатная?",
+      "answer": "Да, первая тренировка бесплатная. Запишитесь, чтобы согласовать группу.",
+      "program": null
+    },
+    {
+      "id": 3,
+      "question": "Обязательны ли соревнования?",
+      "answer": "Нет. Соревнования доступны желающим и подготовленным спортсменам.",
+      "program": null
+    },
+    {
+      "id": 4,
+      "question": "Как выбрать направление?",
+      "answer": "Маугли — физическое развитие детей 3–7 лет. BJJ — борьба для детей от 7 лет. Киокусинкай — занятия для детей, подростков и взрослых.",
+      "program": null
+    },
+    {
+      "id": 5,
+      "question": "Что взять с собой?",
+      "answer": "Точные требования к одежде и экипировке уточните у тренера перед первым занятием.",
+      "program": null
+    },
+    {
+      "id": 6,
+      "question": "Это карате?",
+      "answer": "Нет. Маугли — самостоятельная система физического воспитания и общей физической подготовки детей.",
+      "program": 3
+    },
+    {
+      "id": 7,
+      "question": "Сколько длится занятие?",
+      "answer": "Занятие Маугли длится 45 минут.",
+      "program": 3
+    },
+    {
+      "id": 8,
+      "question": "Как проходит занятие?",
+      "answer": "Двигательные задания, координационные упражнения, ОФП, игровые элементы и работа с собственным телом.",
+      "program": 3
+    },
+    {
+      "id": 9,
+      "question": "Есть ли спарринги?",
+      "answer": "В тренировочном процессе Киокусинкай предусмотрены спарринги. Условия участия обсудите с тренером.",
+      "program": 1
+    },
+    {
+      "id": 10,
+      "question": "Что такое BJJ?",
+      "answer": "Бразильское джиу-джитсу — направление борьбы. В K-Dojo дети осваивают позиции, технику и работу с партнёром.",
+      "program": 2
+    }
+  ],
+  "settings": [
+    {
+      "name": "K-Dojo",
+      "phone": "+7 (925) 017-32-16",
+      "telegram": "https://t.me/kdojokorolev",
+      "email": "",
+      "city": "Королёв",
+      "hero_text": "Спортивный клуб в Королёве",
+      "hero_image": null,
+      "cta_text": "Записаться бесплатно",
+      "about_text": "K-Dojo — спортивный клуб в Королёве. Здесь можно начать заниматься, развиваться и при желании постепенно перейти к серьёзному спорту.",
+      "seo_description": "Киокусинкай, BJJ и Маугли в Королёве. Занятия для детей и взрослых. Первая тренировка бесплатно.",
+      "privacy_text": "",
+      "consent_text": "",
+      "legal_ready": false
+    }
+  ],
+  "events": [],
+  "gallery": [],
+  "results": []
+}

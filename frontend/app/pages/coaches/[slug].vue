@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Coach } from "~/types/api";
 const route = useRoute();
-const { data: coach, error } = await useClubApi<Coach>(
+const { data: coach, error } = await useClubContent<Coach>(
   `coaches/${String(route.params.slug)}`,
 );
 if (!coach.value)
