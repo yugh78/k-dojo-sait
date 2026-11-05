@@ -1,6 +1,25 @@
 <script setup lang="ts">
 const open = ref(false);
+const header = ref<HTMLElement | null>(null);
+const hidden = ref(false);
+let lastScrollY = 0;
 const directions = ref<HTMLDetailsElement | null>(null);
+function onScroll() {
+  const scrollY = Math.max(0, window.scrollY);
+  if (
+    scrollY <= (header.value?.offsetHeight ?? 90) ||
+    open.value ||
+    directions.value?.open ||
+    header.value?.contains(document.activeElement)
+  ) {
+    hidden.value = false;
+    lastScrollY = scrollY;
+    return;
+  }
+  if (Math.abs(scrollY - lastScrollY) < 8) return;
+  hidden.value = scrollY > lastScrollY;
+  lastScrollY = scrollY;
+}
 function onDirectionsPointerEnter(event: PointerEvent) {
   if (event.pointerType === "mouse" && directions.value) {
     directions.value.open = true;
@@ -36,10 +55,13 @@ function onDirectionsFocusOut(event: FocusEvent) {
   }
 }
 onMounted(() => {
+  lastScrollY = window.scrollY;
+  window.addEventListener("scroll", onScroll, { passive: true });
   document.addEventListener("pointerdown", onOutsidePointer);
   document.addEventListener("keydown", onEscape);
 });
 onBeforeUnmount(() => {
+  window.removeEventListener("scroll", onScroll);
   document.removeEventListener("pointerdown", onOutsidePointer);
   document.removeEventListener("keydown", onEscape);
 });
@@ -48,6 +70,7 @@ watch(
   () => route.fullPath,
   () => {
     open.value = false;
+    hidden.value = false;
     closeDirections();
   },
 );
@@ -64,7 +87,12 @@ const links = [
 ];
 </script>
 <template>
-  <header class="site-header">
+  <header
+    ref="header"
+    class="site-header"
+    :class="{ 'site-header-hidden': hidden }"
+    @focusin="hidden = false"
+  >
     <NuxtLink class="brand" to="/" aria-label="K-Dojo — главная">
       <img src="/brand/k-dojo.svg" alt="" width="60" height="60" />
       <span class="brand-wordmark"

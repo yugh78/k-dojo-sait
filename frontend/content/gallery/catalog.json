@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {
+      "slug": "kyokushin",
+      "title": "Киокушинкай карате",
+      "description": "Техника, работа в парах и путь к новым поясам."
+    },
+    {
+      "slug": "bjj",
+      "title": "BJJ",
+      "description": "Бразильское джиу-джитсу и грэпплинг."
+    },
+    {
+      "slug": "mowgli",
+      "title": "Маугли",
+      "description": "Первые спортивные открытия самых маленьких."
+    },
+    {
+      "slug": "competitions",
+      "title": "Соревнования",
+      "description": "Выходы на татами и моменты, которые запоминаются."
+    },
+    {
+      "slug": "camps",
+      "title": "Спортивные сборы",
+      "description": "Тренировки, новые задачи и время вместе."
+    },
+    {
+      "slug": "club",
+      "title": "Жизнь клуба",
+      "description": "Люди, атмосфера и повседневные тренировки K-Dojo."
+    }
+  ],
+  "albums": [
+    {
+      "slug": "technique-2026-10-02",
+      "category": "kyokushin",
+      "title": "Работа над техникой",
+      "date": "2026-10-02",
+      "description": "Отработка ударов и работа с партнёром на тренировке K-Dojo.",
+      "cover": 1
+    },
+    {
+      "slug": "training-2026-09-30",
+      "category": "club",
+      "title": "Тренировка в команде",
+      "date": "2026-09-30",
+      "description": "Разминка, упражнения на координацию и поддержка друг друга.",
+      "cover": 2,
+      "coverPosition": "center 25%"
+    }
+  ],
+  "featured": [
+    { "album": "technique-2026-10-02", "photo": 1 },
+    { "album": "training-2026-09-30", "photo": 2 },
+    { "album": "technique-2026-10-02", "photo": 3 },
+    { "album": "training-2026-09-30", "photo": 4 }
+  ]
+}

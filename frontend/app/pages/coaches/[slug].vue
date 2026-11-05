@@ -22,6 +22,8 @@ usePageSeo(coach.value.full_name);
       </div>
       <section class="section grid-2">
         <ResponsiveImage
+          class="coach-portrait"
+          :class="{ 'coach-photo-cropped': coach?.slug === 'timofeev' }"
           :src="coach?.photo"
           :alt="coach?.full_name || 'Тренер'"
         />

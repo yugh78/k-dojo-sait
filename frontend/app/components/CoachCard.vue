@@ -4,9 +4,13 @@ defineProps<{ coach: Coach }>();
 </script>
 <template>
   <article class="coach-card">
-    <NuxtLink :to="'/coaches/' + coach.slug"
+    <NuxtLink
+      class="coach-card-media"
+      :to="'/coaches/' + coach.slug"
+      :aria-label="coach.full_name"
       ><ResponsiveImage
         v-if="coach.photo"
+        :class="{ 'coach-photo-cropped': coach.slug === 'timofeev' }"
         :src="coach.photo"
         :alt="coach.full_name"
       />
@@ -15,11 +19,17 @@ defineProps<{ coach: Coach }>();
         <span>ТРЕНЕРСКИЙ СОСТАВ / K–DOJO</span>
         <span class="card-arrow">↗</span>
       </div>
-      <h3>{{ coach.full_name }}</h3></NuxtLink
-    >
-    <p>{{ coach.short_description }}</p>
-    <NuxtLink class="text-link" :to="'/coaches/' + coach.slug"
-      >О тренере ↗</NuxtLink
-    >
+    </NuxtLink>
+    <div class="coach-card-body">
+      <h3>
+        <NuxtLink :to="'/coaches/' + coach.slug">{{
+          coach.full_name
+        }}</NuxtLink>
+      </h3>
+      <p>{{ coach.short_description }}</p>
+      <NuxtLink class="text-link" :to="'/coaches/' + coach.slug"
+        >О тренере <span aria-hidden="true">↗</span></NuxtLink
+      >
+    </div>
   </article>
 </template>

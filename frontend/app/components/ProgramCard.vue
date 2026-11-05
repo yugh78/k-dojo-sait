@@ -36,9 +36,6 @@ defineProps<{ program: Program; index?: number }>();
       </h3>
       <span class="program-audience">{{ program.audience }}</span>
       <p>{{ program.short_description }}</p>
-      <span class="text-link"
-        >О направлении <span aria-hidden="true">↗</span></span
-      >
     </div>
   </NuxtLink>
 </template>

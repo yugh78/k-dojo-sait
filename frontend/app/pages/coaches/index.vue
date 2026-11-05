@@ -15,7 +15,10 @@ const { data: coaches, error } = await useClubContent<Coach[]>("coaches");
       </div>
       <section class="section">
         <ApiState :error="error"
-          ><div class="grid-3">
+          ><div
+            class="grid-3 coaches-grid"
+            :class="{ 'coaches-grid-four': coaches?.length === 4 }"
+          >
             <CoachCard
               v-for="coach in coaches"
               :key="coach.id"

@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import type { Location, SiteSettings } from "~/types/api";
+import type { SiteSettings } from "~/types/api";
 usePageSeo("Контакты и запись на тренировку");
-const { data: locations, error } =
-  await useClubContent<Location[]>("locations");
 const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
 </script>
 <template>
@@ -23,38 +21,15 @@ const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
     </div>
     <section class="section grid-2">
       <div>
-        <h2>Наши залы</h2>
-        <ApiState :error="error"
-          ><article
-            v-for="location in locations"
-            :key="location.id"
-            class="location-card"
-          >
-            <h2>{{ location.name }}</h2>
-            <address>{{ location.address }}</address>
-            <p v-if="location.entrance">{{ location.entrance }}</p>
-            <ResponsiveImage
-              v-if="location.photo"
-              :src="location.photo"
-              :alt="location.name"
-            />
-            <p>
-              <a
-                v-if="location.route_url"
-                class="text-link"
-                :href="location.route_url"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Открыть карту и маршрут ↗</a
-              >
-            </p>
-          </article></ApiState
-        >
-        <p class="muted">
-          Адреса групп Киокусинкай и «Маугли» уточняйте у администрации. Не все
-          направления проходят в одном зале.
+        <p class="eyebrow">ВАШ ПЕРВЫЙ ШАГ</p>
+        <h2>Подберём группу.</h2>
+        <p class="lead">
+          Расскажите, для кого ищете занятия и какое направление интересно.
+          Поможем выбрать удобную группу.
         </p>
-        <NuxtLink class="text-link" to="/schedule">Расписание групп ↗</NuxtLink>
+        <NuxtLink class="text-link" to="/schedule"
+          >Смотреть расписание ↗</NuxtLink
+        >
       </div>
       <ApplicationForm />
     </section>

@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nuxt dev --host 127.0.0.1",
-    "build": "nuxt build",
+    "dev": "node scripts/prepare-gallery.mjs && nuxt dev --host 127.0.0.1",
+    "build": "node scripts/prepare-gallery.mjs && nuxt build",
+    "gallery:prepare": "node scripts/prepare-gallery.mjs",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
@@ -26,6 +27,7 @@
     "@playwright/test": "^1.55.0",
     "eslint": "^10.4.0",
     "prettier": "^3.6.0",
+    "sharp": "^0.35.5",
     "typescript": "^5.9.0",
     "vitest": "^5.0.0",
     "vue-tsc": "^3.0.0"

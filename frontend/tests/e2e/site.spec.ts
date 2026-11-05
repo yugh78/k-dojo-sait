@@ -29,7 +29,27 @@ test("all main pages, local content and no browser exceptions", async ({
   }
   expect(errors).toEqual([]);
 });
-test("schedule program and age filtering", async ({ page }) => {
+test("schedule age 3–7 shows only Mowgli", async ({ page }) => {
+  await page.goto("/schedule");
+  const age = page.getByLabel("Возраст", { exact: true });
+  for (const value of [3, 4, 5, 6, 7]) {
+    await age.fill(String(value));
+    const entries = page.locator(".schedule-entry");
+    await expect(entries).toHaveCount(3);
+    for (const entry of await entries.all()) {
+      await expect(entry.locator("h3")).toHaveText("Маугли");
+    }
+  }
+  await age.fill("8");
+  await expect(
+    page.locator(".schedule-entry h3").filter({ hasText: "Каратэ" }).first(),
+  ).toBeVisible();
+  await expect(
+    page.locator(".schedule-entry h3").filter({ hasText: "Маугли" }),
+  ).toHaveCount(0);
+});
+
+test("schedule program and age filters remain compatible", async ({ page }) => {
   await page.goto("/schedule?program=bjj");
   await expect(page.getByLabel("Направление", { exact: true })).toHaveValue(
     "bjj",
@@ -38,7 +58,37 @@ test("schedule program and age filtering", async ({ page }) => {
   await page.getByLabel("Возраст", { exact: true }).fill("6");
   await expect(page.locator(".schedule-entry")).toHaveCount(0);
   await page.getByLabel("Возраст", { exact: true }).fill("7");
+  await expect(page.locator(".schedule-entry")).toHaveCount(0);
+  await page.getByLabel("Возраст", { exact: true }).fill("8");
   await expect(page.locator(".schedule-entry")).toHaveCount(3);
+});
+test("club pages show schedules and contacts without hall details", async ({
+  page,
+}) => {
+  for (const path of [
+    "/",
+    "/schedule",
+    "/kyokushin",
+    "/bjj",
+    "/mowgli",
+    "/contacts",
+  ]) {
+    await page.goto(path);
+    await expect(page.locator("body")).not.toContainText(
+      /(?:Наши залы|Зал BJJ|Адрес уточняйте|Адрес зала уточняйте|проспект Королёва)/,
+    );
+  }
+  await page.goto("/schedule");
+  await expect(page.getByLabel("Зал", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Направление", { exact: true })).toBeVisible();
+  await expect(page.locator(".schedule-entry").first()).toBeVisible();
+  await page.goto("/contacts");
+  await expect(
+    page.getByRole("link", { name: "Смотреть расписание" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Позвонить в клуб" }),
+  ).toBeVisible();
 });
 test("mobile menu is keyboard accessible", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });

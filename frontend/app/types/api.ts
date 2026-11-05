@@ -26,24 +26,10 @@ export interface Coach {
   programs: string[];
   certificates: { id: number; title: string; image: string }[];
 }
-export interface Location {
-  id: number;
-  name: string;
-  slug: string;
-  address: string;
-  latitude: string | null;
-  longitude: string | null;
-  entrance: string;
-  phone: string;
-  route_url: string;
-  programs: number[];
-  photo: string;
-}
 export interface ScheduleEntry {
   id: number;
   program: Pick<Program, "id" | "name" | "slug" | "accent">;
   training_group: { id: number; name: string };
-  location: Location | null;
   coaches: Pick<Coach, "id" | "full_name" | "slug">[];
   weekday: number;
   start_time: string;
@@ -51,7 +37,6 @@ export interface ScheduleEntry {
   minimum_age: number | null;
   maximum_age: number | null;
   audience: string;
-  notes: string;
 }
 export interface PricingPlan {
   id: number;
@@ -80,6 +65,19 @@ export interface GalleryImage {
   image_webp: string;
   image_avif: string;
   caption: string;
+  video?: string;
+  position?: string;
+  width?: number;
+  height?: number;
+  thumbnail?: string;
+  srcset?: string;
+  original?: string;
+  categoryTitle?: string;
+  albumSlug?: string;
+  albumTitle?: string;
+  albumUrl?: string;
+  albumTotal?: number;
+  index?: number;
 }
 export interface Album {
   id: number;

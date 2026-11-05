@@ -1,6 +1,6 @@
 ﻿import content from "~/data/club.json";
 import type { ScheduleEntry, ClubEvent } from "~/types/api";
-import { ageOutsideRange } from "~/utils/format";
+import { filterSchedule } from "~/utils/schedule";
 
 export function useClubContent<T>(
   path: string,
@@ -14,25 +14,8 @@ export function useClubContent<T>(
       return (rows as { slug?: string }[]).find((row) => row.slug === slug) as
         T | undefined;
     const filters = query?.value;
-    if (collection === "schedule" && filters) {
-      return (rows as unknown as ScheduleEntry[]).filter(
-        (entry) =>
-          (!filters.program || entry.program.slug === filters.program) &&
-          (!filters.coach ||
-            entry.coaches.some(
-              (coach) => String(coach.id) === filters.coach,
-            )) &&
-          (!filters.location ||
-            String(entry.location?.id) === filters.location) &&
-          (!filters.weekday || String(entry.weekday) === filters.weekday) &&
-          (!filters.age ||
-            !ageOutsideRange(
-              Number(filters.age),
-              entry.minimum_age,
-              entry.maximum_age,
-            )),
-      ) as T;
-    }
+    if (collection === "schedule" && filters)
+      return filterSchedule(rows as unknown as ScheduleEntry[], filters) as T;
     if (collection === "events" && filters?.period) {
       const today = new Date().toISOString().slice(0, 10);
       return (rows as unknown as ClubEvent[]).filter((event) =>

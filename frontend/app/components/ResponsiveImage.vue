@@ -6,8 +6,21 @@ withDefaults(
     webp?: string;
     avif?: string;
     eager?: boolean;
+    srcset?: string;
+    sizes?: string;
+    width?: number;
+    height?: number;
   }>(),
-  { src: "", webp: "", avif: "", eager: false },
+  {
+    src: "",
+    webp: "",
+    avif: "",
+    eager: false,
+    srcset: "",
+    sizes: "100vw",
+    width: 1200,
+    height: 800,
+  },
 );
 </script>
 <template>
@@ -17,10 +30,13 @@ withDefaults(
     <img
       :src="src"
       :alt="alt"
+      :srcset="srcset || undefined"
+      :sizes="srcset ? sizes : undefined"
+      decoding="async"
       :loading="eager ? 'eager' : 'lazy'"
       :fetchpriority="eager ? 'high' : 'auto'"
-      width="1200"
-      height="800"
+      :width="width"
+      :height="height"
   /></picture>
   <div
     v-else

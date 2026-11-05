@@ -1,6 +1,59 @@
 ﻿<script setup lang="ts">
 import type { SiteSettings } from "~/types/api";
 const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
+let cancelScroll = () => {};
+onBeforeUnmount(() => cancelScroll());
+
+function scrollToPrograms(event: MouseEvent) {
+  cancelScroll();
+  if (
+    event.ctrlKey ||
+    event.metaKey ||
+    event.shiftKey ||
+    event.altKey ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  )
+    return;
+  const target = document.getElementById("programs");
+  if (!target) return;
+  event.preventDefault();
+
+  const start = window.scrollY;
+  const offset =
+    parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) ||
+    0;
+  const destination = Math.max(
+    0,
+    start + target.getBoundingClientRect().top - offset,
+  );
+  const started = performance.now();
+  const controller = new AbortController();
+  let frame = 0;
+  cancelScroll = () => {
+    cancelAnimationFrame(frame);
+    controller.abort();
+  };
+  for (const type of ["wheel", "touchstart", "keydown"]) {
+    window.addEventListener(type, cancelScroll, {
+      passive: true,
+      signal: controller.signal,
+    });
+  }
+  function animate(now: number) {
+    const progress = Math.min((now - started) / 1200, 1);
+    const eased = progress ** 3 * (progress * (progress * 6 - 15) + 10);
+    window.scrollTo({
+      top: start + (destination - start) * eased,
+      behavior: "instant",
+    });
+    if (progress < 1) frame = requestAnimationFrame(animate);
+    else {
+      cancelScroll();
+      window.location.hash = "programs";
+    }
+  }
+  frame = requestAnimationFrame(animate);
+}
 </script>
 <template>
   <section class="hero">
@@ -20,13 +73,13 @@ const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
             {{ settings?.cta_text || "Записаться бесплатно" }}
             <span aria-hidden="true">↗</span>
           </NuxtLink>
-          <a class="hero-secondary" href="#programs"
+          <a class="hero-secondary" href="#programs" @click="scrollToPrograms"
             >Выбрать направление <span aria-hidden="true">↓</span></a
           >
         </div>
         <p class="hero-footnote">Без опыта. Без покупки экипировки заранее.</p>
       </div>
-      <div class="hero-identity">
+      <div class="hero-identity" color="red">
         <div v-if="settings?.hero_image" class="hero-photo">
           <ResponsiveImage
             :src="settings.hero_image"
@@ -53,7 +106,7 @@ const settings = inject<ComputedRef<SiteSettings | undefined>>("siteSettings");
     </div>
     <div class="container hero-index">
       <span>K–DOJO / КОРОЛЁВ</span><span>ДЕТИ · ПОДРОСТКИ · ВЗРОСЛЫЕ</span
-      ><a href="#programs">ЗНАКОМСТВО С КЛУБОМ ↓</a>
+      ><a href="#programs" @click="scrollToPrograms">ЗНАКОМСТВО С КЛУБОМ ↓</a>
     </div>
   </section>
 </template>

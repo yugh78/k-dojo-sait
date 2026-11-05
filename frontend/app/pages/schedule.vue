@@ -1,40 +1,28 @@
 <script setup lang="ts">
-import type { ScheduleEntry, Program, Coach, Location } from "~/types/api";
+import { scheduleDays } from "~/utils/schedule";
 usePageSeo("Расписание тренировок в Королёве");
 const route = useRoute();
 const router = useRouter();
-const program = ref(String(route.query.program || ""));
-const age = ref("");
-const coach = ref("");
-const location = ref("");
-const weekday = ref("");
-const { data: programs } = await useClubContent<Program[]>("programs");
-const { data: coaches } = await useClubContent<Coach[]>("coaches");
-const { data: locations } = await useClubContent<Location[]>("locations");
-const query = computed(() => ({
-  program: program.value,
-  age: age.value,
-  coach: coach.value,
-  location: location.value,
-  weekday: weekday.value,
-}));
 const {
-  data: entries,
+  program,
+  age,
+  coach,
+  weekday,
+  programs,
+  coaches,
+  entries,
   error,
   status,
-} = await useClubContent<ScheduleEntry[]>("schedule", query);
+} = useSchedule(String(route.query.program || ""));
 watch(program, (value) =>
   router.replace({ query: { ...route.query, program: value || undefined } }),
 );
-const days = [
-  "Понедельник",
-  "Вторник",
-  "Среда",
-  "Четверг",
-  "Пятница",
-  "Суббота",
-  "Воскресенье",
-];
+watch(
+  () => route.query.program,
+  (value) => {
+    program.value = String(value || "");
+  },
+);
 </script>
 <template>
   <div>
@@ -47,50 +35,21 @@ const days = [
         </p>
       </div>
       <section class="section">
-        <div class="filters">
-          <label
-            >Направление<select v-model="program" aria-label="Направление">
-              <option value="">Все направления</option>
-              <option v-for="p in programs" :key="p.id" :value="p.slug">
-                {{ p.name }}
-              </option>
-            </select></label
-          ><label
-            >Возраст<input
-              v-model="age"
-              type="number"
-              min="1"
-              max="120"
-              placeholder="Любой" /></label
-          ><label
-            >Тренер<select v-model="coach" aria-label="Тренер">
-              <option value="">Все тренеры</option>
-              <option v-for="c in coaches" :key="c.id" :value="String(c.id)">
-                {{ c.full_name }}
-              </option>
-            </select></label
-          ><label
-            >Зал<select v-model="location" aria-label="Зал">
-              <option value="">Все залы</option>
-              <option v-for="l in locations" :key="l.id" :value="String(l.id)">
-                {{ l.name }}
-              </option>
-            </select></label
-          ><label
-            >День недели<select v-model="weekday" aria-label="День недели">
-              <option value="">Вся неделя</option>
-              <option v-for="(day, i) in days" :key="day" :value="String(i)">
-                {{ day }}
-              </option>
-            </select></label
-          >
-        </div>
+        <ScheduleFilters
+          v-model:program="program"
+          v-model:age="age"
+          v-model:coach="coach"
+          v-model:weekday="weekday"
+          :programs="programs || []"
+          :coaches="coaches || []"
+          show-weekday
+        />
         <ApiState :error="error" :pending="status === 'pending'"
           ><div v-if="entries?.length" class="schedule-grid">
-            <template v-for="(day, i) in days" :key="day"
+            <template v-for="(day, i) in scheduleDays" :key="day.short"
               ><ScheduleDay
-                v-if="entries.some((e) => e.weekday === i)"
-                :day="day"
+                v-if="!weekday || weekday === String(i)"
+                :day="day.name"
                 :entries="entries.filter((e) => e.weekday === i)"
             /></template>
           </div>

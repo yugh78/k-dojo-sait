@@ -15,8 +15,10 @@ defineProps<{
       </p>
       <h2>{{ title }}</h2>
     </div>
-    <NuxtLink v-if="to" class="text-link" :to="to"
-      >{{ linkText || "Подробнее" }} ↗</NuxtLink
+    <slot name="action"
+      ><NuxtLink v-if="to" class="text-link" :to="to"
+        >{{ linkText || "Подробнее" }} ↗</NuxtLink
+      ></slot
     >
   </div>
 </template>

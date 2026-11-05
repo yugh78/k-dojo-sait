@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+
 export default defineNuxtConfig({
   compatibilityDate: "2026-09-14",
   devtools: { enabled: false },
@@ -14,5 +16,20 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/svg+xml", href: "/brand/k-dojo.svg" }],
     },
   },
-  nitro: { compressPublicAssets: true },
+  nitro: {
+    compressPublicAssets: true,
+    serverAssets: [
+      {
+        baseName: "gallery",
+        dir: fileURLToPath(new URL("./.gallery-cache/data", import.meta.url)),
+      },
+    ],
+    publicAssets: [
+      {
+        baseURL: "/gallery-images",
+        dir: fileURLToPath(new URL("./.gallery-cache/images", import.meta.url)),
+        maxAge: 31536000,
+      },
+    ],
+  },
 });

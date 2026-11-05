@@ -90,7 +90,7 @@ const [
       </section>
       <section class="section">
         <SectionHeader title="Наши тренеры" />
-        <div class="grid-3">
+        <div class="grid-3 coaches-grid">
           <CoachCard
             v-for="coach in coaches?.filter((c) => c.programs.includes(slug))"
             :key="coach.id"

@@ -9,6 +9,8 @@ import type {
   FAQ,
   SiteSettings,
 } from "~/types/api";
+import { scheduleDays } from "~/utils/schedule";
+const scheduleModal = ref<{ show: () => void }>();
 usePageSeo("Спортивный клуб в Королёве");
 const [
   { data: programs, error },
@@ -57,8 +59,9 @@ const upcoming = computed(
 <template>
   <div>
     <HomeHero />
-    <section id="programs" class="container section programs-section">
+    <section class="container section programs-section">
       <SectionHeader
+        id="programs"
         number="01"
         eyebrow="ВАШЕ НАПРАВЛЕНИЕ"
         title="Один клуб. Свой путь."
@@ -105,24 +108,31 @@ const upcoming = computed(
         to="/coaches"
         link-text="Все тренеры"
       />
-      <div class="grid-3">
+      <div
+        class="grid-3 coaches-grid"
+        :class="{ 'coaches-grid-four': coaches?.length === 4 }"
+      >
         <CoachCard v-for="coach in coaches" :key="coach.id" :coach="coach" />
       </div>
     </section>
-    <HomeTraining :programs="programs || []" />
     <section class="container section">
-      <SectionHeader
-        number="05"
-        eyebrow="РАСПИСАНИЕ"
-        title="Время для себя."
-        to="/schedule"
-        link-text="Все дни и группы"
-      />
+      <SectionHeader number="04" eyebrow="РАСПИСАНИЕ" title="Время для себя.">
+        <template #action>
+          <button
+            type="button"
+            class="text-link schedule-open"
+            aria-haspopup="dialog"
+            @click="scheduleModal?.show()"
+          >
+            Все дни и группы ↗
+          </button>
+        </template>
+      </SectionHeader>
       <div class="schedule-grid">
         <ScheduleDay
-          v-for="(day, i) in ['Понедельник', 'Вторник', 'Среда']"
-          :key="day"
-          :day="day"
+          v-for="(day, i) in scheduleDays.slice(0, 3)"
+          :key="day.short"
+          :day="day.name"
           :entries="(schedule || []).filter((e) => e.weekday === i).slice(0, 2)"
         />
       </div>
@@ -131,10 +141,11 @@ const upcoming = computed(
         <NuxtLink to="/schedule">в полном расписании ↗</NuxtLink>
       </p>
     </section>
+    <ScheduleModal ref="scheduleModal" />
     <section class="pricing-section">
       <div class="container section">
         <SectionHeader
-          number="06"
+          number="05"
           eyebrow="АБОНЕМЕНТЫ"
           title="Выберите свой ритм."
           to="/pricing"
@@ -181,6 +192,7 @@ const upcoming = computed(
         </article>
       </div>
     </section>
+    <HomeGallery />
     <TrialBand />
     <section class="container section home-faq">
       <div>
@@ -206,9 +218,7 @@ const upcoming = computed(
             >{{ settings?.phone || "+7 (925) 017-32-16" }}</a
           >
           <p class="muted">Королёв, Московская область</p>
-          <NuxtLink class="text-link" to="/contacts"
-            >Залы и контакты ↗</NuxtLink
-          >
+          <NuxtLink class="text-link" to="/contacts">Контакты ↗</NuxtLink>
         </div>
         <ApplicationForm />
       </div>
